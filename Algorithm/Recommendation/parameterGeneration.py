@@ -1,10 +1,12 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime
-
+import os
+from inspect import getsourcefile
 def getcityCoord(startupData):
     # Getting the co-ordniates from the file
-    coordData = pd.read_csv('./data/citi_co-ordinates.csv')
+    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
+    coordData = pd.read_csv(path+'/data/citi_co-ordinates.csv')
     coordData["City"] = coordData["City"].str.strip()
     coordData.drop_duplicates("City", inplace=True)
 
@@ -22,8 +24,8 @@ def getcityCoord(startupData):
 
 def getAge(personData):
     today = datetime.today()
-
-    eduData=pd.read_csv('./data/educationData.csv')
+    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
+    eduData=pd.read_csv(path+'/data/educationData.csv')
     eduData = eduData.dropna(subset=['name','duration','degree'], how='any').reset_index(drop=True)
 
     # Check if the string is present
@@ -46,8 +48,8 @@ def getAge(personData):
     return personData
 
 def getTier(personData):
-
-    eduData=pd.read_csv('./data/educationData.csv')
+    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
+    eduData=pd.read_csv(path+'/data/educationData.csv')
     eduData = eduData.dropna(subset=['name','college'], how='any').reset_index(drop=True)
 
     # Check if the string is present

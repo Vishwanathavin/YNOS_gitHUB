@@ -1,17 +1,21 @@
 import pandas as pd
 import numpy as np
-from datetime import datetime
+from inspect import getsourcefile
+import datetime
+import os
 def treatment():
 
-    path = './data'
-    # Assign the columns to pick from each of the data sources
-    inpColumn = pd.read_csv('./data/dataFromEachSource.csv')
 
-    treatKeyurData(inpColumn,path)
-    # treatInternData(inpColumn,path)
-    # treatVIData(inpColumn,path)
-    # treatPersonData(inpColumn,path)
-    # treatCrunchbaseData(inpColumn,path)
+
+    path =  os.path.dirname(os.path.abspath(getsourcefile(lambda:0)))
+    # Assign the columns to pick from each of the data sources
+    inpColumn = pd.read_csv(path +'/data/dataFromEachSource.csv')
+
+    keyurdata = treatKeyurData(inpColumn,path)
+    internDataFunded,internDataNonFunded = treatInternData(inpColumn,path)
+    viData = treatVIData(inpColumn,path)
+    personData = treatPersonData(inpColumn,path)
+    crunchbaseData = treatCrunchbaseData(inpColumn,path)
 
 
     # # ---------------------------------------------------------------------
@@ -171,12 +175,12 @@ def treatment():
     #         seriesList.append(expseries)
     # expData = pd.DataFrame(seriesList)
 
-    return
+    return keyurdata,internDataFunded,internDataNonFunded,viData,personData,crunchbaseData
 
 def treatKeyurData(inpColumn,path):
 
     keyurColumns = inpColumn['keyurColumns'].dropna().tolist()
-    keyurData = pd.read_csv(path + '/keyur.csv')
+    keyurData = pd.read_csv(path + '/data/keyur.csv')
 
 
     keyurData['DOI'].replace('', np.nan, inplace=True)
@@ -194,6 +198,8 @@ def treatKeyurData(inpColumn,path):
 
     keyurData = keyurData[keyurColumns]
 
+    keyurData['dealDate'] = pd.to_datetime(keyurData['dealDate'], format="%m/%d/%Y")
+
     keyurData = keyurData.groupby(["startupName"]).agg(
         {'InvestorName': lambda x: list(x),
          'Round_Investment_Amount_INR': lambda x: list(x),
@@ -201,7 +207,7 @@ def treatKeyurData(inpColumn,path):
 
     keyurData.startupName = keyurData.startupName.str.strip()
 
-    keyurData['dealDate'] = pd.to_datetime(keyurData['dealDate'], format="%m/%d/%Y")
+
     for index, row in keyurData.iterrows():
         row['InvestorName'] = [x for y, x in sorted(zip(row['dealDate'], row['InvestorName']))]
         row['Round_Investment_Amount_INR'] = [x for y, x in sorted(
@@ -212,8 +218,8 @@ def treatKeyurData(inpColumn,path):
     keyurData.startupName = keyurData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
     keyurData.startupName = keyurData.startupName.str.replace('PVT.', '').str.replace('LTD.', '').str.replace('PRIVATE','').str.replace('LIMITED', '').str.strip()
     keyurData.InvestorName = keyurData.InvestorName.astype(str).fillna('').apply(lambda x: x.upper())
-    keyurData.to_csv('./metaOutput/keyurData.csv', index=False)
-    return
+    keyurData.to_csv(path+'/metaOutput/keyurData.csv', index=False)
+    return keyurData
 
 
 
@@ -222,7 +228,7 @@ def treatKeyurData(inpColumn,path):
 #
 def treatInternData(inpColumn,path):
     internColumns = inpColumn['internColumns'].dropna().tolist()
-    internData = pd.read_csv(path + '/interns.csv')
+    internData = pd.read_csv(path + '/data/interns.csv')
     # ---------------------------------------------------------------------
 
     # InternData
@@ -271,13 +277,13 @@ def treatInternData(inpColumn,path):
     # for index, row in internDataFunded.iterrows():
     #     datetime_object = datetime.strptime(row.dealDate[0],row.dealDate[1], '%b %Y')
     #     print datetime_object
-    internDataFunded.to_csv('./metaOutput/internDataFunded.csv', index=False)
-    internDataNonFunded.to_csv('./metaOutput/internDataNonFunded.csv', index=False)
-    return
+    internDataFunded.to_csv(path+'/metaOutput/internDataFunded.csv', index=False)
+    internDataNonFunded.to_csv(path+'/metaOutput/internDataNonFunded.csv', index=False)
+    return internDataFunded,internDataNonFunded
 
 def treatVIData(inpColumn,path):
     VIColumns = inpColumn['VIColumns'].dropna().tolist()
-    viData = pd.read_csv(path + '/ventureIntelligence.csv')
+    viData = pd.read_csv(path + '/data/ventureIntelligence.csv')
     # ----------------------------------------------------------------------
 
     # Venture Intelligence data
@@ -292,27 +298,19 @@ def treatVIData(inpColumn,path):
     viData.InvestorName = viData.InvestorName.astype(str).fillna('').apply(lambda x: x.upper())
     viData.startupName = viData.startupName.str.replace('(', '').str.replace(')', '')
 
-    viData.dealDate = viData.dealDate.str.replace('January','Jan').str.replace\
-        ('February','Feb').str.replace('March','Mar').str.replace('April','Apr')\
-        .str.replace('June','Jun').str.replace('July','Jul').str.replace\
-        ('August','Aug').str.replace('September','Sep').str.replace('October','Oct')\
-        .str.replace('November','Nov').str.replace('December','Dec').str.replace('20','')
-    viData.dealDate = viData.dealDate.str.replace('Jan', '01').str.replace \
-        ('Feb', '02').str.replace('Mar', '03').str.replace('Apr', '04').str.replace('May', '05') \
-        .str.replace('Jun', '06').str.replace('Jul', '07').str.replace \
-        ('Aug', '08').str.replace('Sep', '09').str.replace('Oct', '10') \
-        .str.replace('Nov', '11').str.replace('Dec', 'Dec').str.replace('-', '/')
+    viData['dealDate'] = pd.to_datetime(viData['dealDate'], format="%B-%Y")
+
     # Get the date in the same format as keyur Data
 
-    viData.to_csv('./metaOutput/viData.csv', index=False)
-    return
+    viData.to_csv(path+'/metaOutput/viData.csv', index=False)
+    return viData
 
 #--------------------------------------------------------------------
 #
 #
 def treatPersonData(inpColumn,path):
-    founderFile = open(path + '/founders_profiles_new.json').read()
-    invFile = open(path + '/Investor_final.json').read()
+    founderFile = open(path + '/data/founders_profiles_new.json').read()
+    invFile = open(path + '/data/Investor_final.json').read()
 
     invFile = invFile.replace('\n', '').replace('\r', '').replace('}{', '},{')
     invData = pd.read_json(invFile, lines=True)
@@ -351,14 +349,14 @@ def treatPersonData(inpColumn,path):
                 index=['name', 'position', 'company', 'duration', 'F_or_I'])
             seriesList.append(expseries)
     expData = pd.DataFrame(seriesList)
-    personData[['name']+['F_or_I']+['file_id']].to_csv('./metaOutput/personData.csv', index=False, encoding='utf-8')
-    expData.to_csv('../Algorithm/Recommendation/data/expData.csv', index=False, encoding='utf-8')
-    educationData.to_csv('../Algorithm/Recommendation/data/expData.csv', index=False, encoding='UTF8')
-    return
+    personData[['name']+['F_or_I']+['file_id']].to_csv(path+'/metaOutput/personData.csv', index=False, encoding='utf-8')
+    expData.to_csv(path+'/../Algorithm/Recommendation/data/expData.csv', index=False, encoding='utf-8')
+    educationData.to_csv(path+'/../Algorithm/Recommendation/data/educationData.csv', index=False, encoding='UTF8')
+    return personData
 
 def treatCrunchbaseData(inpColumn,path):
     crunchbaseColumns = inpColumn['crunchbaseColumns'].dropna().tolist()
-    crunchbaseFile = open(path + '/startupProfiles.json').read()
+    crunchbaseFile = open(path + '/data/startupProfiles.json').read()
     # ---------------------------------------------------------------------
 
     # Crunchbase file
@@ -384,8 +382,9 @@ def treatCrunchbaseData(inpColumn,path):
         crunchbaseData.founders.iloc[index] = val
     crunchbaseData.founders = crunchbaseData.founders.astype(str).fillna('').apply(lambda x: x.upper())
 
-    crunchbaseData.to_csv('./metaOutput/crunchbaseData.csv', index=False, encoding='UTF8')
+    crunchbaseData.to_csv(path+'/metaOutput/crunchbaseData.csv', index=False, encoding='UTF8')
 
+    return crunchbaseData
 # ---------------------------------------------------------------------------------
 #
 #

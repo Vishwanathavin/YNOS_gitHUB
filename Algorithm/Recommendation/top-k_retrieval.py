@@ -2,10 +2,12 @@ import pandas as pd
 from parameterGeneration import getcityCoord
 from getParams import generateTrainingData
 import os
+from inspect import getsourcefile
 from sklearn.neighbors import NearestNeighbors
 
 def getInputParams(columns):
-    testData = pd.read_csv('./data/inputFile.csv')
+    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
+    testData = pd.read_csv(path+'/data/inputFile.csv')
     testData = getcityCoord(testData)
     testData["FounderAvgAge"] = 0.354838709677
     testData["CollegeAvg"] = 0.0
@@ -16,11 +18,14 @@ def getInputParams(columns):
     missing_cols = set(onehotCols) - set(testData.startupClassification)
     for c in missing_cols:
         testData[c] = 0
-    testData.to_csv('./output/testdata.csv',index=False)
+    testData.to_csv(path+'/output/testdata.csv',index=False)
     return testData
+
+
 def topK_retrieval():
-    if (os.path.exists('./output/startupData.csv')):
-        trainingData=pd.read_csv('./output/startupData.csv')
+    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
+    if (os.path.exists(path+'/output/startupData.csv')):
+        trainingData=pd.read_csv(path+'/output/startupData.csv')
     else:
         trainingData= generateTrainingData()
 

@@ -5,6 +5,7 @@ from parameterGeneration import getAge,getTier,getcityCoord
 import os
 import pandas as pd
 import numpy as np
+from inspect import getsourcefile
 
 def getPersonParams(personData):
     personData=getAge(personData)
@@ -44,12 +45,10 @@ def getStartupParams(startupData,personData):
     return startupData
 
 def generateTrainingData():
-
-
-
-    if (os.path.exists('../../dataGeneration/output/personData.csv') and os.path.exists('../../dataGeneration/output/startupData.csv')):
-        personData=pd.read_csv('../../dataGeneration/output/personData.csv')
-        startupData=pd.read_csv('../../dataGeneration/output/startupData.csv')
+    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
+    if (os.path.exists(path+'/../../dataGeneration/output/personData.csv') and os.path.exists(path+'/../../dataGeneration/output/startupData.csv')):
+        personData=pd.read_csv(path+'/../../dataGeneration/output/personData.csv')
+        startupData=pd.read_csv(path+'/../../dataGeneration/output/startupData.csv')
     else:
         startupData,personData=dataConsolidate()
 
@@ -60,7 +59,7 @@ def generateTrainingData():
     # Do onehot encoding
     oneHot = pd.get_dummies(startupData['startupClassification'], prefix='Classification')
     startupData = pd.concat([startupData, oneHot], axis=1)
-    startupData.to_csv('./output/startupData.csv', index=False)
+    startupData.to_csv(path+'/output/startupData.csv', index=False)
     return startupData
 
 

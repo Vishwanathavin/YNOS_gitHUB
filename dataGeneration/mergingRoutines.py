@@ -1,7 +1,7 @@
 import pandas as pd
 
 def internVIMerge(internDataFunded, viData):
-    internDataFunded = pd.merge(internDataFunded, viData, on=['startupName', 'dealDate'], how='inner')
+    internDataFunded = pd.merge(internDataFunded, viData, on=['startupName', 'dealDate'], how='left')
     # internDataFunded['InvestorName'] = viData[internDataFunded.startupName.isin(viData.startupName) and internDataFunded.dealDate.isin(viData.dealDate) ]['InvestorName']
 
     internDataFunded = internDataFunded.groupby(["startupName"]).agg(

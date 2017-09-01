@@ -1,5 +1,5 @@
 import os
-
+from inspect import getsourcefile
 import pandas as pd
 
 from mergingRoutines import internVIMerge, internKeyurMerge, startupCrunchbaseMerge, \
@@ -85,22 +85,23 @@ def getPersonData(startupData,personData):
 
 
 def dataConsolidate():
-    if (os.path.exists('./metaOutput/educationData.csv')):
-        expData = pd.read_csv('./metaOutput/expData.csv')
-        viData = pd.read_csv('./metaOutput/viData.csv')
-        crunchbaseData = pd.read_csv('./metaOutput/crunchbaseData.csv')
-        internDataFunded = pd.read_csv('./metaOutput/internDataFunded.csv')
-        internDataNonFunded = pd.read_csv('./metaOutput/internDataNonFunded.csv')
-        keyurData = pd.read_csv('./metaOutput/keyurData.csv')
-        personData=pd.read_csv('./metaOutput/personData.csv')
+    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
+    if (os.path.exists(path+'/metaOutput/educationData.csv')):
+        # expData = pd.read_csv('./metaOutput/expData.csv')
+        viData = pd.read_csv(path+'/metaOutput/viData.csv')
+        crunchbaseData = pd.read_csv(path+'/metaOutput/crunchbaseData.csv')
+        internDataFunded = pd.read_csv(path+'/metaOutput/internDataFunded.csv')
+        # internDataNonFunded = pd.read_csv('./metaOutput/internDataNonFunded.csv')
+        keyurData = pd.read_csv(path+'/metaOutput/keyurData.csv')
+        personData=pd.read_csv(path+'/metaOutput/personData.csv')
     else:
-        personData,expData, viData, crunchbaseData, internDataFunded, internDataNonFunded, keyurData = treatment()
+        keyurData,internDataFunded, internDataNonFunded, viData,personData, crunchbaseData  = treatment()
 
     startupData = getStartupData(crunchbaseData, internDataFunded, keyurData,viData)
 
     personData,startupData = getPersonData(startupData,personData)
-    startupData.to_csv('./output/startupData.csv', index=False)
-    personData.to_csv('./output/personData.csv', index=False)
+    startupData.to_csv(path+'/output/startupData.csv', index=False)
+    personData.to_csv(path+'/output/personData.csv', index=False)
 
     return startupData, personData
 
