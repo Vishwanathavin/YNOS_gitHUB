@@ -19,6 +19,8 @@ def internVIMerge(internDataFunded, viData):
     return internDataFunded
 
 def internKeyurMerge(internDataFunded,keyurData):
+
+    # Dom a merge instead of Isin
     commonData1 = internDataFunded[~internDataFunded.startupName.isin(keyurData.startupName)]
     commonData2 = keyurData[~keyurData.startupName.isin(internDataFunded.startupName)]
     commonData3 = keyurData[keyurData.startupName.isin(internDataFunded.startupName)]
@@ -27,6 +29,8 @@ def internKeyurMerge(internDataFunded,keyurData):
     return startupData
 
 def startupCrunchbaseMerge(startupData,crunchbaseData):
+
+    # Do a merge instead of isin
     commonData1 = crunchbaseData[crunchbaseData.startupName.isin(startupData.startupName)]
     startupData = startupData.merge(
     commonData1[['startupName'] + ['founders']],

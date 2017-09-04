@@ -11,9 +11,18 @@ def getStartupData(crunchbaseData, internDataFunded, keyurData,viData):
 
     internDataFunded = internVIMerge(internDataFunded, viData)
 
+
     startupData = internKeyurMerge(internDataFunded, keyurData)
 
+    # Common Companies between Keyur-Intern
+
     startupData = startupCrunchbaseMerge(startupData, crunchbaseData)
+    # Analysis
+    # Data without Investor Name
+    # Data without City
+    # Data w/o round investment amount- Deal date
+    # Data w/o founder Name
+    #
     return startupData
 
 def getPersonData(startupData,personData):
@@ -24,6 +33,8 @@ def getPersonData(startupData,personData):
     #Purge person Data to the ones that matter
     personData=personData[personData.name.isin(founderNamesInDataset.name) | personData.name.isin(investorNamesInDataset.name) ].reset_index(drop=True)
 
+    #Analysis:
+    # Get the names of founder and investor needed
 
     return personData,startupData
 

@@ -54,6 +54,9 @@ def generateTrainingData():
 
     startupData = startupData[['startupName'] + ['startupClassification'] + ['founders'] + ['InvestorName'] + ['City']]
     personData=getPersonParams(personData)
+
+    # Check if the age and college tier is correct
+    personData.to_csv(path+'/output/personData.csv', index=False)
     startupData=getStartupParams(startupData,personData)
 
     # Do onehot encoding
