@@ -34,7 +34,7 @@ def getPersonData(startupData,personData):
     personData=personData[personData.name.isin(founderNamesInDataset.name) | personData.name.isin(investorNamesInDataset.name) ].reset_index(drop=True)
 
     #Analysis:
-    # Get the names of founder and investor needed
+    # Get the Linkedin Details of founder and investor needed
 
     return personData,startupData
 
