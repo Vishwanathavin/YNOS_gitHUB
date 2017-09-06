@@ -186,8 +186,7 @@ def treatKeyurData(inpColumn,path):
         keyurData = pd.read_csv(keyur_temp)
 
 
-    keyurData['DOI'].replace('', np.nan, inplace=True)
-    keyurData = keyurData[(keyurData['DOI'] >= 2014) | (keyurData['DOI'].isnull())]
+
 
     keyurData.rename(columns={'Company Name': 'startupName',
                               'ICB Industry': 'Industry',
@@ -202,6 +201,10 @@ def treatKeyurData(inpColumn,path):
     keyurData = keyurData[keyurColumns]
 
     keyurData['dealDate'] = pd.to_datetime(keyurData['dealDate'], format="%m/%d/%Y")
+
+    # keyurData['DOI'].replace('', np.nan, inplace=True)
+    # keyurData = keyurData[(keyurData['DOI'] >= 2014) | (keyurData['DOI'].isnull())]
+    keyurData = keyurData[(keyurData['dealDate'] > '2014-01-01')]
 
     keyurData = keyurData.groupby(["startupName"]).agg(
         {'InvestorName': lambda x: list(x),
