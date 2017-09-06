@@ -8,6 +8,7 @@ from treatment import treatment
 
 
 def getStartupData(crunchbaseData, internDataFunded, keyurData,viData):
+    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
 
     internDataFunded = internVIMerge(internDataFunded, viData)
 
@@ -17,11 +18,16 @@ def getStartupData(crunchbaseData, internDataFunded, keyurData,viData):
     # Common Companies between Keyur-Intern
 
     startupData = startupCrunchbaseMerge(startupData, crunchbaseData)
+
     # Analysis
-    # Data without Investor Name
-    # Data without City
-    # Data w/o round investment amount- Deal date
-    # Data w/o founder Name
+    assert isinstance(startupData, object)
+    missing_startupData = startupData[startupData.isnull().any(axis=1)]
+    missing_startupData.to_csv(path.replace("\\","/")+'/metaOutput/missing _comps_details.csv', index=False, encoding='utf-8')
+    log_file = open(path+'/metaOutput/log_file.txt', 'a')
+    empty_cells = startupData.isnull().sum().sum()
+    log_file.write(str(empty_cells))
+    log_file.write('\n')
+    log_file.close()
     #
     return startupData
 
@@ -111,8 +117,8 @@ def dataConsolidate():
     startupData = getStartupData(crunchbaseData, internDataFunded, keyurData,viData)
 
     personData,startupData = getPersonData(startupData,personData)
-    startupData.to_csv(path+'/output/startupData.csv', index=False)
-    personData.to_csv(path+'/output/personData.csv', index=False)
+    startupData.to_csv(path.replace("\\","/")+'/output/startupData.csv', index=False)
+    personData.to_csv(path.replace("\\","/")+'/output/personData.csv', index=False)
 
     return startupData, personData
 
