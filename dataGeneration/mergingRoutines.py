@@ -2,11 +2,11 @@ import pandas as pd
 
 def internVIMerge(internDataFunded, viData):
     commonData = pd.merge(internDataFunded, viData, how='inner',left_on=['startupName', 'dealDate'],right_on=['startupName', 'dealDate'])
-    internDataFunded = pd.merge(internDataFunded,commonData,how='outer',on=['startupName','dealDate','City','State','startupClassification','Round_Investment_Amount_INR'])     
+    internDataFunded = pd.merge(internDataFunded,commonData,how='outer',on=['startupName','dealDate','City','startupClassification','Round_Investment_Amount_INR'])
 
     internDataFunded = internDataFunded.groupby(["startupName"]).agg(
         {'InvestorName': lambda x: list(x),
-         'City': 'first', 'State': 'first', 'startupClassification': 'first',
+         'City': 'first', 'startupClassification': 'first',
          'Round_Investment_Amount_INR': lambda x: list(x),
          'dealDate': lambda x: list(x)}).reset_index()
     for index, row in internDataFunded.iterrows():

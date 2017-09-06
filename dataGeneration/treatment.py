@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from inspect import getsourcefile
-import codecs #to handle errors while loading file
+import codecs #to handle errors while loading file.
 import datetime
 import os
 def treatment():
