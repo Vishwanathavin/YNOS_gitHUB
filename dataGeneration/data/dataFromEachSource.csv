@@ -1,0 +1,6 @@
+internColumns,keyurColumns,crunchbaseColumns,VIColumns
+startupName,startupName,startupName,startupName
+City,InvestorName,founders,InvestorName
+startupClassification,Round_Investment_Amount_INR,,dealDate
+Round_Investment_Amount_INR,dealDate,,
+dealDate,,,
