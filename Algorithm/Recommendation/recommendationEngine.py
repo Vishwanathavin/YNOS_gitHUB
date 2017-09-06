@@ -1,25 +1,12 @@
-import pandas as pd
-from parameterGeneration import getcityCoord
-from getParams import generateTrainingData
 import os
 from inspect import getsourcefile
+
+import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 
-def getInputParams(columns):
-    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
-    testData = pd.read_csv(path+'/data/inputFile.csv')
-    testData = getcityCoord(testData)
-    testData["FounderAvgAge"] = 0.354838709677
-    testData["CollegeAvg"] = 0.0
-    testData.startupClassification = 'Classification_' + testData.startupClassification.astype(str)
+from getParams import generateTrainingData,getInputParams
 
-    onehotCols = [c for c in columns if c[:14] == 'Classification']
-    testData[testData.startupClassification.iloc[0]] = 1
-    missing_cols = set(onehotCols) - set(testData.startupClassification)
-    for c in missing_cols:
-        testData[c] = 0
-    testData.to_csv(path+'/output/testdata.csv',index=False)
-    return testData
+
 
 
 def topKcompanies(trainingData,testData):
@@ -97,7 +84,7 @@ def recommendationEngine():
 
     testData = getInputParams(trainingData.columns)
 
-    trainingData = trainingData.drop(['City', 'founders', 'startupClassification'], 1)
+    trainingData = trainingData.drop(['City', 'founders', 'startupClassification','dealDate','Round_Investment_Amount_INR','InvestorID'], 1)
     testData = testData.drop(['City', 'founders', 'startupClassification', 'InvestorName'], 1)
 
     trainingData = trainingData[sorted(trainingData.columns.tolist())]

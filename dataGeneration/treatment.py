@@ -362,8 +362,8 @@ def treatPersonData(inpColumn,path):
             seriesList.append(expseries)
     expData = pd.DataFrame(seriesList)
     personData[['name']+['F_or_I']+['file_id']].to_csv(path+'/metaOutput/personData.csv', index=False, encoding='utf-8')
-    expData.to_csv(path.replace("\\","/")+'/../Algorithm/Recommendation/data/expData.csv', index=False, encoding='utf-8')
-    educationData.to_csv(path.replace("\\","/")+'/../Algorithm/Recommendation/data/educationData.csv', index=False, encoding='UTF8')
+    expData.to_csv(path.replace("\\","/")+'/metaOutput/expData.csv', index=False, encoding='utf-8')
+    educationData.to_csv(path.replace("\\","/")+'/metaOutput/educationData.csv', index=False, encoding='UTF8')
     return personData
 
 def treatCrunchbaseData(inpColumn,path):
