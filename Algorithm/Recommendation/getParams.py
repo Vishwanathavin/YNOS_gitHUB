@@ -56,7 +56,7 @@ def generateTrainingData():
     personData=getPersonParams(personData)
 
     # Check if the age and college tier is correct
-    personData.to_csv(path+'/output/personData.csv', index=False)
+    personData[['F_or_I']+['file_id']+['name']+['Age']+['Tier']].to_csv(path+'/output/personData.csv', index=False)
     startupData=getStartupParams(startupData,personData)
 
     # Do onehot encoding
