@@ -206,7 +206,8 @@ def treatKeyurData(inpColumn,path):
     keyurData = keyurData.groupby(["startupName"]).agg(
         {'InvestorName': lambda x: list(x),
          'Round_Investment_Amount_INR': lambda x: list(x),
-         'dealDate': lambda x: list(x)}).reset_index()
+         'dealDate': lambda x: list(x),
+         'City':'first'}).reset_index()
 
     keyurData.startupName = keyurData.startupName.str.strip()
 
