@@ -1,2 +1,2 @@
 Trial readme from vishwa machine
-trial readme from vikram pc
+trial readme from vishwa pc
