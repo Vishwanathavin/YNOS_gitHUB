@@ -154,13 +154,13 @@ if __name__=='__main__':
 #     #Read InternData
 #     internData = pd.read_csv('./Data/InternData.csv')[internColumns]
 #     internData.Start_up_name = internData.Start_up_name.astype(str)
-#     internData.Start_up_name = internData.Start_up_name.fillna('').apply(lambda x: x.upper())
+#     internData.Start_up_name = internData.Start_up_name.apply(lambda x: x.upper())
 #     if(debug): internDataShape = internData.shape
 #
 #     # Get Keyur Data
 #     keyurData = pd.read_csv('./Data/KeyurData.csv')[keyurColumns]
 #     keyurData.Start_up_name = keyurData.Start_up_name.astype(str)
-#     keyurData.Start_up_name = keyurData.Start_up_name.fillna('').apply(lambda x: x.upper())
+#     keyurData.Start_up_name = keyurData.Start_up_name.apply(lambda x: x.upper())
 #
 #     #Filter out the year in keyur data
 #     keyurData = keyurData[keyurData["DOI"] >= year]
@@ -194,7 +194,7 @@ if __name__=='__main__':
 #     crunchbaseData = crunchbaseData[crunchbaseColumns]
 #     crunchbaseData.rename(columns={'company': 'Start_up_name'}, inplace=True)
 #     crunchbaseData.Start_up_name = crunchbaseData.Start_up_name.astype(str)
-#     crunchbaseData.Start_up_name = crunchbaseData.Start_up_name.fillna('').apply(lambda x: x.upper())
+#     crunchbaseData.Start_up_name = crunchbaseData.Start_up_name.apply(lambda x: x.upper())
 #     if (debug): crunchbaseDataShape = crunchbaseData.shape
 #
 #     # Data Mergin
@@ -219,7 +219,7 @@ if __name__=='__main__':
 #     # VIData = pd.read_csv('./Data/temp_debug/VentureIntelligenceData.csv')[VIColumns]
 #     # VIData.rename(columns={'Company': 'Start_up_name'}, inplace=True)
 #     # VIData.Start_up_name = VIData.Start_up_name.astype(str)
-#     # VIData.Start_up_name = VIData.Start_up_name.fillna('').apply(lambda x: x.upper())
+#     # VIData.Start_up_name = VIData.Start_up_name.apply(lambda x: x.upper())
 #     # if (debug): VIDataShape = VIData.shape
 #     #
 #     #

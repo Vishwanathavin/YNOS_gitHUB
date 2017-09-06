@@ -25,7 +25,7 @@ def internKeyurMerge(internDataFunded,keyurData):
     commonData2 = keyurData[~keyurData.startupName.isin(internDataFunded.startupName)]
     commonData3 = keyurData[keyurData.startupName.isin(internDataFunded.startupName)]
     startupData = pd.concat([commonData1, commonData2, commonData3], axis=0, ignore_index=True)
-    startupData.InvestorName = startupData.InvestorName.astype(str).fillna('')
+    startupData.InvestorName = startupData.InvestorName.astype(str)
     return startupData
 
 def startupCrunchbaseMerge(startupData,crunchbaseData):
@@ -36,13 +36,13 @@ def startupCrunchbaseMerge(startupData,crunchbaseData):
     commonData1[['startupName'] + ['founders']],
     on='startupName',
     how='outer')
-    startupData.founders = startupData.founders.astype(str).fillna('')
+    startupData.founders = startupData.founders.astype(str)
     return  startupData
 
 def getFounderNames(startupData,personData):
     # Get the relevant founders and Investors
     founderList=[]
-    startupData.founders = startupData.founders.astype(str).fillna('')
+    startupData.founders = startupData.founders.astype(str)
 
     startupData["founders"] = startupData["founders"].str.replace('u\'', '').str.replace('\'', '').str.replace(
         '[', '').str.replace(']', '')

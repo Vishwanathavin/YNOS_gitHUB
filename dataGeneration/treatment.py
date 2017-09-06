@@ -38,7 +38,7 @@ def treatment():
     #                            'Round1 date': 'dealDate'
     #                            }, inplace=True)
     # internData = internData[internColumns]
-    # internData.startupName = internData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
+    # internData.startupName = internData.startupName.astype(str).apply(lambda x: x.upper())
     # internData.startupName = internData.startupName.str.strip()
     # #internData = internData.drop_duplicates(['startupName'])
     # internData.startupName = internData.startupName.str.replace('PVT','').replace('LTD.','').replace('PRIVATE','').replace('LIMITED','')
@@ -57,7 +57,7 @@ def treatment():
     # # 4. Rename columns
     # # 5. Merge Investor names, investment amount
     #
-    # # keyurData.DOI = keyurData.DOI.astype(str).fillna('')
+    # # keyurData.DOI = keyurData.DOI.astype(str)
     #
     # keyurData['DOI'].replace('', np.nan, inplace=True)
     # keyurData = keyurData[(keyurData['DOI'] >= 2014) | (keyurData['DOI'].isnull())]
@@ -90,9 +90,9 @@ def treatment():
     # ##                             NOTE
     # ##                 The sorting of the date, round investment amount has an issue. It is not ordered. Take care
     # #
-    # keyurData.startupName = keyurData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
+    # keyurData.startupName = keyurData.startupName.astype(str).apply(lambda x: x.upper())
     # keyurData.startupName = keyurData.startupName.str.replace('PVT', '').replace('LTD.', '').replace('PRIVATE', '').replace('LIMITED', '')
-    # keyurData.InvestorName = keyurData.InvestorName.astype(str).fillna('').apply(lambda x: x.upper())
+    # keyurData.InvestorName = keyurData.InvestorName.astype(str).apply(lambda x: x.upper())
     #
     # # ---------------------------------------------------------------------
     #
@@ -105,7 +105,7 @@ def treatment():
     # crunchbaseData = pd.read_json(crunchbaseFile, lines=True)
     # crunchbaseData.rename(columns={'company': 'startupName'}, inplace=True)
     # crunchbaseData = crunchbaseData[crunchbaseColumns]
-    # crunchbaseData.startupName = crunchbaseData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
+    # crunchbaseData.startupName = crunchbaseData.startupName.astype(str).apply(lambda x: x.upper())
     #
     # crunchbaseData.startupName = crunchbaseData.startupName.str.replace('PVT', '').replace('LTD.', '').replace('PRIVATE','').replace('LIMITED', '')
     # crunchbaseData.startupName = crunchbaseData.startupName.str.strip()
@@ -117,7 +117,7 @@ def treatment():
     #     val = [crunchbaseData.iloc[index]['founders'][x].encode('ascii', 'ignore') for x in
     #            range(len(crunchbaseData.iloc[index].founders))]
     #     crunchbaseData.founders.iloc[index] = val
-    # crunchbaseData.founders = crunchbaseData.founders.astype(str).fillna('').apply(lambda x: x.upper())
+    # crunchbaseData.founders = crunchbaseData.founders.astype(str).apply(lambda x: x.upper())
     # #
     # # crunchbaseData["founders"].str.split(',').tolist()
     # # crunchbaseData["founders"] = crunchbaseData["founders"].astype(str).replace('u\'', '').replace('\'', '').replace('[','').replace(']', '')
@@ -132,8 +132,8 @@ def treatment():
     # viData.rename(columns={'Company': 'startupName', 'Investors': 'InvestorName'}, inplace=True)
     # viData = viData[VIColumns]
     # # viData = viData.drop_duplicates('startupName')
-    # viData.startupName = viData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
-    # viData.InvestorName = viData.InvestorName.astype(str).fillna('').apply(lambda x: x.upper())
+    # viData.startupName = viData.startupName.astype(str).apply(lambda x: x.upper())
+    # viData.InvestorName = viData.InvestorName.astype(str).apply(lambda x: x.upper())
     # viData.startupName = viData.startupName.str.replace('(', '').str.replace(')','')
     # # Convertthe date of investment
     #
@@ -143,11 +143,11 @@ def treatment():
     # # 3. Convert to pandas
     # invFile = invFile.replace('\n', '').replace('\r', '').replace('}{', '},{')
     # invData = pd.read_json(invFile, lines=True)
-    # invData.name = invData.name.fillna('').apply(lambda x: x.upper())
+    # invData.name = invData.name.apply(lambda x: x.upper())
     # # invData = invData.drop_duplicates('name')
     # founderFile = founderFile.replace('\n', '').replace('\r', '').replace('}{', '},{')
     # founderData = pd.read_json(founderFile, lines=True)
-    # founderData.name = founderData.name.fillna('').apply(lambda x: x.upper())
+    # founderData.name = founderData.name.apply(lambda x: x.upper())
     # # founderData = founderData.drop_duplicates('name')
     # founderData['F_or_I'] = 'F'
     # invData['F_or_I'] = 'I'
@@ -222,9 +222,9 @@ def treatKeyurData(inpColumn,path):
         row['dealDate'] = sorted(row['dealDate'])
         keyurData.iloc[index] = row
     # Get the investor name as a list of lists
-    keyurData.startupName = keyurData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
+    keyurData.startupName = keyurData.startupName.astype(str).apply(lambda x: x.upper())
     keyurData.startupName = keyurData.startupName.str.replace('PVT.', '').str.replace('LTD.', '').str.replace('PRIVATE','').str.replace('LIMITED', '').str.strip()
-    keyurData.InvestorName = keyurData.InvestorName.astype(str).fillna('').apply(lambda x: x.upper())
+    keyurData.InvestorName = keyurData.InvestorName.astype(str).apply(lambda x: x.upper())
     keyurData.to_csv(path.replace("\\","/")+'/metaOutput/keyurData.csv', index=False)
     return keyurData
 
@@ -258,12 +258,12 @@ def treatInternData(inpColumn,path):
                                'Round1 date': 'dealDate'
                                }, inplace=True)
     internData = internData[internColumns]
-    internData.startupName = internData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
+    internData.startupName = internData.startupName.astype(str).apply(lambda x: x.upper())
     internData.startupName = internData.startupName.str.strip()
     # internData = internData.drop_duplicates(['startupName'])
     internData.startupName = internData.startupName.str.replace('PVT', '').replace('LTD.', '').replace('PRIVATE','').replace('LIMITED', '')
 
-    internData.City.replace(' ', np.nan, inplace=True)
+
 
     internData['dealDate'] = pd.to_datetime(internData['dealDate'], format="%m/%y")
     internDataNonFunded = internData[internData["dealDate"].isnull()]
@@ -280,7 +280,7 @@ def treatInternData(inpColumn,path):
     #     .str.replace('Jun', '06').str.replace('Jul', '07').str.replace \
     #     ('Aug', '08').str.replace('Sep', '09').str.replace('Oct', '10') \
     #     .str.replace('Nov', '11').str.replace('Dec', '12').str.replace('-', '/')
-    # internDataFunded.dealDate = internDataFunded.dealDate.astype(str).fillna('').apply(lambda x: x.upper())
+    # internDataFunded.dealDate = internDataFunded.dealDate.astype(str).apply(lambda x: x.upper())
 
     # internDataFunded.dealDate = internDataFunded.dealDate.str.split('-').tolist()
     #
@@ -306,8 +306,8 @@ def treatVIData(inpColumn,path):
     viData.rename(columns={'Company': 'startupName', 'Investors': 'InvestorName','Date':'dealDate'}, inplace=True)
     viData = viData[VIColumns]
     # viData = viData.drop_duplicates('startupName')
-    viData.startupName = viData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
-    viData.InvestorName = viData.InvestorName.astype(str).fillna('').apply(lambda x: x.upper())
+    viData.startupName = viData.startupName.astype(str).apply(lambda x: x.upper())
+    viData.InvestorName = viData.InvestorName.astype(str).apply(lambda x: x.upper())
     viData.startupName = viData.startupName.str.replace('(', '').str.replace(')', '')
 
     viData['dealDate'] = pd.to_datetime(viData['dealDate'], format="%B-%Y")
@@ -326,12 +326,12 @@ def treatPersonData(inpColumn,path):
 
     invFile = invFile.replace('\n', '').replace('\r', '').replace('}{', '},{')
     invData = pd.read_json(invFile, lines=True)
-    invData.name = invData.name.fillna('').apply(lambda x: x.upper())
+    invData.name = invData.name.apply(lambda x: x.upper())
 
 
     founderFile = founderFile.replace('\n', '').replace('\r', '').replace('}{', '},{')
     founderData = pd.read_json(founderFile, lines=True)
-    founderData.name = founderData.name.fillna('').apply(lambda x: x.upper())
+    founderData.name = founderData.name.apply(lambda x: x.upper())
 
 
     founderData['F_or_I'] = 'F'
@@ -348,8 +348,8 @@ def treatPersonData(inpColumn,path):
                 index=['name', 'duration', 'college', 'degree', 'F_or_I'])
             seriesList.append(schseries)
     educationData = pd.DataFrame(seriesList)
-    educationData['college']=educationData['college'].fillna('').apply(lambda x: x.upper())
-    educationData['degree']=educationData['degree'].fillna('').apply(lambda x: x.upper())
+    educationData['college']=educationData['college'].apply(lambda x: x.upper())
+    educationData['degree']=educationData['degree'].apply(lambda x: x.upper())
     seriesList = []
 
     for row in range(personData.shape[0]):
@@ -380,7 +380,7 @@ def treatCrunchbaseData(inpColumn,path):
     crunchbaseData = pd.read_json(crunchbaseFile, lines=True)
     crunchbaseData.rename(columns={'company': 'startupName'}, inplace=True)
     crunchbaseData = crunchbaseData[crunchbaseColumns]
-    crunchbaseData.startupName = crunchbaseData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
+    crunchbaseData.startupName = crunchbaseData.startupName.astype(str).apply(lambda x: x.upper())
 
     crunchbaseData.startupName = crunchbaseData.startupName.str.replace('PVT', '').replace('LTD.', '').replace(
         'PRIVATE', '').replace('LIMITED', '')
@@ -392,7 +392,7 @@ def treatCrunchbaseData(inpColumn,path):
         val = [crunchbaseData.iloc[index]['founders'][x].encode('ascii', 'ignore') for x in
                range(len(crunchbaseData.iloc[index].founders))]
         crunchbaseData.founders.iloc[index] = val
-    crunchbaseData.founders = crunchbaseData.founders.astype(str).fillna('').apply(lambda x: x.upper())
+    crunchbaseData.founders = crunchbaseData.founders.astype(str).apply(lambda x: x.upper())
 
     crunchbaseData.to_csv(path.replace("\\","/")+'/metaOutput/crunchbaseData.csv', index=False, encoding='UTF8')
 
@@ -423,7 +423,7 @@ if __name__=='__main__':
     #                           '140 character description':'description',
     #                           'Business model Classification':'businessModel'}, inplace=True)
     # internData=internData[internColumns]
-    # internData.startupName = internData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
+    # internData.startupName = internData.startupName.astype(str).apply(lambda x: x.upper())
     #
     # # ---------------------------------------------------------------------
     #
@@ -448,8 +448,8 @@ if __name__=='__main__':
     #     {'Industry': 'first', 'investorName': lambda x: list(x), 'Deal_Investment_Amount_INR_M': lambda x: list(x),
     #      'DOI': 'first','Source':'first','startupClassification':'first'}).reset_index()
     #
-    # keyurData.startupName = keyurData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
-    # keyurData.investorName = keyurData.investorName.astype(str).fillna('').apply(lambda x: x.upper())
+    # keyurData.startupName = keyurData.startupName.astype(str).apply(lambda x: x.upper())
+    # keyurData.investorName = keyurData.investorName.astype(str).apply(lambda x: x.upper())
     # # print keyurData.columns
     # # keyurData.to_csv('./temp.csv')
     # # ---------------------------------------------------------------------
@@ -463,7 +463,7 @@ if __name__=='__main__':
     # crunchbaseData=pd.read_json(crunchbaseFile,lines=True)
     # crunchbaseData.rename(columns={'company': 'startupName'},inplace=True)
     # crunchbaseData=crunchbaseData[crunchbaseColumns]
-    # crunchbaseData.startupName = crunchbaseData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
+    # crunchbaseData.startupName = crunchbaseData.startupName.astype(str).apply(lambda x: x.upper())
     # crunchbaseData=crunchbaseData.drop_duplicates(['startupName'])
     # # ----------------------------------------------------------------------
     #
@@ -476,7 +476,7 @@ if __name__=='__main__':
     # viData=viData[VIColumns]
     # viData = viData.drop_duplicates('startupName')
     # viData.startupName = viData.startupName.replace('(','').replace(')','')
-    # viData.startupName = viData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
-    # viData.investorName = viData.investorName.astype(str).fillna('').apply(lambda x: x.upper())
+    # viData.startupName = viData.startupName.astype(str).apply(lambda x: x.upper())
+    # viData.investorName = viData.investorName.astype(str).apply(lambda x: x.upper())
     #----------------------------------------------------------------------
 
