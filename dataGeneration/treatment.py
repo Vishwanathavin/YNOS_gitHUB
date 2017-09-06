@@ -9,7 +9,6 @@ def treatment():
 
 
     path =  os.path.dirname(os.path.abspath(getsourcefile(lambda:0)))
-    print(path)
     # Assign the columns to pick from each of the data sources
     inpColumn = pd.read_csv(path +'/data/dataFromEachSource.csv')
 
