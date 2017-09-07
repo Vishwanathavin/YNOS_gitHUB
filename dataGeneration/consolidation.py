@@ -8,12 +8,26 @@ from treatment import treatment
 
 
 def getStartupData(crunchbaseData, internDataFunded, keyurData,viData):
+    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
 
-    startupData = internVIMerge(internDataFunded, viData)
+    internDataFunded = internVIMerge(internDataFunded, viData)
 
-    startupData = internKeyurMerge(startupData, keyurData)
+    startupData = internKeyurMerge(internDataFunded, keyurData)
+
+    # Common Companies between Keyur-Intern
 
     startupData = startupCrunchbaseMerge(startupData, crunchbaseData)
+
+    # Analysis part
+    assert isinstance(startupData, object)
+    missing_startupData = startupData[startupData.isnull().any(axis=1)]
+    missing_startupData.to_csv(path.replace("\\","/")+'/metaOutput/missing _comps_details.csv', index=False, encoding='utf-8')
+    log_file = open(path+'/metaOutput/log_file.txt', 'a')
+    empty_cells = startupData.isnull().sum().sum()
+    log_file.write(str(empty_cells))
+    log_file.write('\n')
+    log_file.close()
+    #
     return startupData
 
 def getPersonData(startupData,personData):
@@ -26,36 +40,6 @@ def getPersonData(startupData,personData):
 
 
     return personData,startupData
-
-
-
-
-def dataConsolidate():
-    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
-    if (os.path.exists(path+'/metaOutput/educationData.csv')):
-        # expData = pd.read_csv('./metaOutput/expData.csv')
-        viData = pd.read_csv(path+'/metaOutput/viData.csv')
-        crunchbaseData = pd.read_csv(path+'/metaOutput/crunchbaseData.csv')
-        internDataFunded = pd.read_csv(path+'/metaOutput/internDataFunded.csv')
-        # internDataNonFunded = pd.read_csv('./metaOutput/internDataNonFunded.csv')
-        keyurData = pd.read_csv(path+'/metaOutput/keyurData.csv')
-        personData=pd.read_csv(path+'/metaOutput/personData.csv')
-    else:
-        keyurData,internDataFunded, internDataNonFunded, viData,personData, crunchbaseData  = treatment()
-
-    startupData = getStartupData(crunchbaseData, internDataFunded, keyurData,viData)
-
-    #personData,startupData = getPersonData(startupData,personData)
-    startupData.to_csv(path+'/output/startupData.csv', index=False)
-    #personData.to_csv(path+'/output/personData.csv', index=False)
-
-    return startupData, personData
-
-
-
-if __name__=='__main__':
-    dataConsolidate()
-
 
     # for index,rows in eduData.iterrows():
     #     # line = lines.split(',')
@@ -74,7 +58,7 @@ if __name__=='__main__':
     #             else:
     #                 rows[2] = rows[2][0].split(' ')
     #                 if len(rows[2]) == 2:
-    #                     rows[2] = rows[2][1]getPersonData
+    #                     rows[2] = rows[2][1]
     #                 else:
     #                     rows[2] = rows[2][0]
     #             educations[rows[4].strip('\n').lower()] = int(rows[2])
@@ -112,6 +96,36 @@ if __name__=='__main__':
     # out.close()
     # ageFile =pd.read_csv('./metaOutput/age.csv')
     # return ageFile
+
+
+def dataConsolidate():
+    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
+    if (os.path.exists(path+'/metaOutput/educationData.csv')):
+        # expData = pd.read_csv('./metaOutput/expData.csv')
+        viData = pd.read_csv(path+'/metaOutput/viData.csv')
+        crunchbaseData = pd.read_csv(path+'/metaOutput/crunchbaseData.csv')
+        internDataFunded = pd.read_csv(path+'/metaOutput/internDataFunded.csv')
+        # internDataNonFunded = pd.read_csv('./metaOutput/internDataNonFunded.csv')
+        keyurData = pd.read_csv(path+'/metaOutput/keyurData.csv')
+        personData=pd.read_csv(path+'/metaOutput/personData.csv')
+    else:
+        keyurData,internDataFunded, internDataNonFunded, viData,personData, crunchbaseData  = treatment()
+
+    startupData = getStartupData(crunchbaseData, internDataFunded, keyurData,viData)
+
+    personData,startupData = getPersonData(startupData,personData)
+    startupData.to_csv(path.replace("\\","/")+'/output/startupData.csv', index=False)
+    personData.to_csv(path.replace("\\","/")+'/output/personData.csv', index=False)
+
+    return startupData, personData
+
+
+
+if __name__=='__main__':
+    dataConsolidate()
+
+
+
 
 
 

@@ -1,48 +1,26 @@
 import sys
 sys.path.insert(0, "../../dataGeneration")
-from consolidation import dataConsolidate
-from parameterGeneration import getAge,getTier,getcityCoord
+from addParams import addParamsToData,getcityCoord
 import os
 import pandas as pd
 import numpy as np
 from inspect import getsourcefile
 
-def getPersonParams(personData):
-    personData=getAge(personData)
-    personData=getTier(personData)
-    return personData
+def getInputParams(columns):
+    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
+    testData = pd.read_csv(path+'/data/inputFile.csv')
+    testData = getcityCoord(testData)
+    testData["FounderAvgAge"] = 0.354838709677
+    testData["CollegeAvg"] = 0.0
+    testData.startupClassification = 'Classification_' + testData.startupClassification.astype(str)
 
-def getStartupParams(startupData,personData):
-
-    startupData = getcityCoord(startupData)
-
-    startupData["founderAgeAvg"] = ""
-    startupData["collegeTierAvg"] = ""
-
-    # Get the average of the columns
-    for index, row in startupData.iterrows():
-        row["founders"] = row["founders"].replace('\'', '').replace('[', '').replace(']', '')
-        row["founders"] = row["founders"].split(',')
-        agesum = []
-
-        for foundername in range(len(row['founders'])):
-            row.founders[foundername] = row.founders[foundername].strip()
-            agesum = np.append(agesum, personData[personData.name == row.founders[foundername]]["Age"].values)
-
-        ageAvg = agesum.mean()
-        startupData.loc[index, 'founderAgeAvg'] = ageAvg
-
-        tiersum = []
-        for foundername in range(len(row['founders'])):
-            row.founders[foundername] = row.founders[foundername].strip()
-            tiersum = np.append(tiersum, personData[personData.name == row.founders[foundername]]["Tier"].values)
-
-
-        tierAvg = tiersum.mean()
-
-        startupData.loc[index, "collegeTierAvg"] = tierAvg
-
-    return startupData
+    onehotCols = [c for c in columns if c[:14] == 'Classification']
+    testData[testData.startupClassification.iloc[0]] = 1
+    missing_cols = set(onehotCols) - set(testData.startupClassification)
+    for c in missing_cols:
+        testData[c] = 0
+    testData.to_csv(path+'/output/testdata.csv',index=False)
+    return testData
 
 def generateTrainingData():
     path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
@@ -50,11 +28,9 @@ def generateTrainingData():
         personData=pd.read_csv(path+'/../../dataGeneration/output/personData.csv')
         startupData=pd.read_csv(path+'/../../dataGeneration/output/startupData.csv')
     else:
-        startupData,personData=dataConsolidate()
+        startupData,personData=addParamsToData()
 
-    startupData = startupData[['startupName'] + ['startupClassification'] + ['founders'] + ['InvestorName'] + ['City']]
-    personData=getPersonParams(personData)
-    startupData=getStartupParams(startupData,personData)
+
 
     # Do onehot encoding
     oneHot = pd.get_dummies(startupData['startupClassification'], prefix='Classification')

@@ -2,11 +2,11 @@ import pandas as pd
 
 def internVIMerge(internDataFunded, viData):
     commonData = pd.merge(internDataFunded, viData, how='inner',left_on=['startupName', 'dealDate'],right_on=['startupName', 'dealDate'])
-    internDataFunded = pd.merge(internDataFunded,commonData,how='outer',on=['startupName','dealDate','City','State','startupClassification','Round_Investment_Amount_INR'])     
+    internDataFunded = pd.merge(internDataFunded,commonData,how='outer',on=['startupName','dealDate','City','startupClassification','Round_Investment_Amount_INR'])
 
     internDataFunded = internDataFunded.groupby(["startupName"]).agg(
         {'InvestorName': lambda x: list(x),
-         'City': 'first', 'State': 'first', 'startupClassification': 'first',
+         'City': 'first', 'startupClassification': 'first',
          'Round_Investment_Amount_INR': lambda x: list(x),
          'dealDate': lambda x: list(x)}).reset_index()
     for index, row in internDataFunded.iterrows():
@@ -19,26 +19,30 @@ def internVIMerge(internDataFunded, viData):
     return internDataFunded
 
 def internKeyurMerge(internDataFunded,keyurData):
+
+    # Dom a merge instead of Isin
     commonData1 = internDataFunded[~internDataFunded.startupName.isin(keyurData.startupName)]
     commonData2 = keyurData[~keyurData.startupName.isin(internDataFunded.startupName)]
     commonData3 = keyurData[keyurData.startupName.isin(internDataFunded.startupName)]
     startupData = pd.concat([commonData1, commonData2, commonData3], axis=0, ignore_index=True)
-    startupData.InvestorName = startupData.InvestorName.astype(str).fillna('')
+    startupData.InvestorName = startupData.InvestorName.astype(str)
     return startupData
 
 def startupCrunchbaseMerge(startupData,crunchbaseData):
+
+    # Do a merge instead of isin
     commonData1 = crunchbaseData[crunchbaseData.startupName.isin(startupData.startupName)]
     startupData = startupData.merge(
     commonData1[['startupName'] + ['founders']],
     on='startupName',
     how='outer')
-    startupData.founders = startupData.founders.astype(str).fillna('')
+    startupData.founders = startupData.founders.astype(str)
     return  startupData
 
 def getFounderNames(startupData,personData):
     # Get the relevant founders and Investors
     founderList=[]
-    startupData.founders = startupData.founders.astype(str).fillna('')
+    startupData.founders = startupData.founders.astype(str)
 
     startupData["founders"] = startupData["founders"].str.replace('u\'', '').str.replace('\'', '').str.replace(
         '[', '').str.replace(']', '')
