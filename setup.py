@@ -8,11 +8,11 @@ path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
 
 #Delete contents in a folder and create a new folder
 
-#shutil.rmtree(path+'/dataGeneration/metaOutput')
+shutil.rmtree(path+'/dataGeneration/metaOutput')
 if not os.path.exists(path+'/dataGeneration/metaOutput'):
     os.makedirs(path+'/dataGeneration/metaOutput')
 
-#shutil.rmtree(path+'/dataGeneration/output')
+shutil.rmtree(path+'/dataGeneration/output')
 if not os.path.exists(path+'/dataGeneration/output'):
     os.makedirs(path+'/dataGeneration/output')
 

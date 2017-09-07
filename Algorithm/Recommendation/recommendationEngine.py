@@ -21,7 +21,7 @@ def topKcompanies(trainingData,testData):
 
 def topKinvestors(topinvestors):
     path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
-    personData = pd.read_csv(path+'/output/personData.csv')
+    personData = pd.read_csv(path+'/../../dataGeneration/output/personData.csv')
 
     InvList = []
     for index,row in topinvestors.iterrows():
@@ -98,7 +98,7 @@ def recommendationEngine():
 
     output = topKinvestors(topinvestors)
 
-    personData = pd.read_csv(path + '/output/personData.csv')
+    personData = pd.read_csv(path+'/../../dataGeneration/output/personData.csv')
     topinvestors = pd.DataFrame(personData.iloc[output[1][0]]["name"])
 
     print topinvestors
