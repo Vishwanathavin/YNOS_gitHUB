@@ -8,7 +8,8 @@ def treatment():
 
 
 
-    path =  os.path.dirname(os.path.abspath(getsourcefile(lambda:0)))
+    path =  os.path.dirname(os.path.abspath(getsourcefile(lambda:0))) # .replace("\\","/")
+    # path = path.replace("\\","/")
     # Assign the columns to pick from each of the data sources
     inpColumn = pd.read_csv(path +'/data/dataFromEachSource.csv')
     keyurdata=0.0
@@ -231,7 +232,7 @@ def treatKeyurData(inpColumn,path):
     keyurData.startupName = keyurData.startupName.astype(str).apply(lambda x: x.upper())
     keyurData.startupName = keyurData.startupName.str.replace('PVT.', '').str.replace('LTD.', '').str.replace('PRIVATE','').str.replace('LIMITED', '').str.strip()
     keyurData.InvestorName = keyurData.InvestorName.astype(str).apply(lambda x: x.upper())
-    keyurData.to_csv(path.replace("\\","/")+'/metaOutput/keyurData.csv', index=False)
+    keyurData.to_csv(path+'/metaOutput/keyurData.csv', index=False)
     return keyurData
 
 
@@ -293,8 +294,8 @@ def treatInternData(inpColumn,path):
     # for index, row in internDataFunded.iterrows():
     #     datetime_object = datetime.strptime(row.dealDate[0],row.dealDate[1], '%b %Y')
     #     print datetime_object
-    internDataFunded.to_csv(path.replace("\\","/")+'/metaOutput/internDataFunded.csv', index=False)
-    internDataNonFunded.to_csv(path.replace("\\","/")+'/metaOutput/internDataNonFunded.csv', index=False)
+    internDataFunded.to_csv(path+'/metaOutput/internDataFunded.csv', index=False)
+    internDataNonFunded.to_csv(path+'/metaOutput/internDataNonFunded.csv', index=False)
     return internDataFunded,internDataNonFunded
 
 def treatVIData(inpColumn,path):
@@ -320,7 +321,7 @@ def treatVIData(inpColumn,path):
 
     # Get the date in the same format as keyur Data
 
-    viData.to_csv(path.replace("\\","/")+'/metaOutput/viData.csv', index=False)
+    viData.to_csv(path+'/metaOutput/viData.csv', index=False)
     return viData
 
 #--------------------------------------------------------------------
@@ -368,8 +369,8 @@ def treatPersonData(inpColumn,path):
             seriesList.append(expseries)
     expData = pd.DataFrame(seriesList)
     personData[['name']+['F_or_I']+['file_id']].to_csv(path+'/metaOutput/personData.csv', index=False, encoding='utf-8')
-    expData.to_csv(path.replace("\\","/")+'/metaOutput/expData.csv', index=False, encoding='utf-8')
-    educationData.to_csv(path.replace("\\","/")+'/metaOutput/educationData.csv', index=False, encoding='UTF8')
+    expData.to_csv(path+'/metaOutput/expData.csv', index=False, encoding='utf-8')
+    educationData.to_csv(path+'/metaOutput/educationData.csv', index=False, encoding='UTF8')
     return personData
 
 def treatCrunchbaseData(inpColumn,path):
@@ -400,7 +401,7 @@ def treatCrunchbaseData(inpColumn,path):
         crunchbaseData.founders.iloc[index] = val
     crunchbaseData.founders = crunchbaseData.founders.astype(str).apply(lambda x: x.upper())
 
-    crunchbaseData.to_csv(path.replace("\\","/")+'/metaOutput/crunchbaseData.csv', index=False, encoding='UTF8')
+    crunchbaseData.to_csv(path+'/metaOutput/crunchbaseData.csv', index=False, encoding='UTF8')
 
     return crunchbaseData
 # ---------------------------------------------------------------------------------

@@ -18,15 +18,9 @@ def getStartupData(crunchbaseData, internDataFunded, keyurData,viData):
 
     startupData = startupCrunchbaseMerge(startupData, crunchbaseData)
 
-    # Analysis part
-    assert isinstance(startupData, object)
-    missing_startupData = startupData[startupData.isnull().any(axis=1)]
-    missing_startupData.to_csv(path.replace("\\","/")+'/metaOutput/missing _comps_details.csv', index=False, encoding='utf-8')
-    log_file = open(path+'/metaOutput/log_file.txt', 'a')
-    empty_cells = startupData.isnull().sum().sum()
-    log_file.write(str(empty_cells))
-    log_file.write('\n')
-    log_file.close()
+    # Analysis part - new file - analysis report
+    # assert isinstance(startupData, object)
+
     #
     return startupData
 
