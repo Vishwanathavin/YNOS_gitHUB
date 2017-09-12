@@ -272,7 +272,7 @@ def treatInternData(inpColumn,path):
 
 
 
-    internData['dealDate'] = pd.to_datetime(internData['dealDate'], format="%m/%y")
+    internData['dealDate'] = pd.to_datetime(internData['dealDate'], format="%b-%y")
     internDataNonFunded = internData[internData["dealDate"].isnull()]
     internDataFunded = internData[internData["dealDate"].notnull()]
     # internDataFunded.dealDate = internDataFunded.dealDate.str.replace('January', 'Jan').str.replace \
