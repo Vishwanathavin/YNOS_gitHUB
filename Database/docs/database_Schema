@@ -1,0 +1,43 @@
+Collection: StartupData
+
+{  "startupID" : {"$type":"ObjectID","$exists": true},
+   "startupName": {"$type" : "string"},
+   "city" : {"$type" : "Object",
+             "City.name":{"type":"string"},
+             "City.Lon":{"type":"Double"},
+             "City.Lat":{"type":"Double"}
+   },
+   "investorID": {"$type": "array","0":{"$type": "ObjectID"}},
+   "roundInvestmentAmountINR":{"$type": "array","0":{"$type": "double"}},
+   "dealDate":{"$type": "array","0":{"$type": "Date"}},
+   "startupClassification" :  {"$type" : "string"},
+   "founderID": {"$type": "array","0":{"$type": "ObjectID"}},
+   "Source":{"$type" : "string"},
+   "ICB_Sector":{"$type" : "string"},
+   "ICB_Industry":{"$type" : "string"},
+   "groupClassification:{"$type": "array","0":{"$type": "string"}},
+   "businessModel":{"$type" : "string"}
+}  
+
+collection: personData
+
+{
+  "personID": {"$type":"ObjectID","$exists": true},
+  "name" :{"$type":"string"},
+  "description":{"$type":"string"},
+  "experience":{"$type":"Array",
+                 "0":{"$type":"Object",
+                      "duration":{"$type": "Date"},
+                      "position":{"$type": "string"},
+                      "company" : {"$type": "string"}
+                 }},
+   "job":{"$type": "string"},
+   "location":{"$type": "string"},
+   "school":{"$type":"Array",
+                 "0":{"$type":"Object",
+                      "duration":{"$type": "Date"},
+                      "field":{"$type": "string"},
+                      "college" : {"$type": "string"},
+                      "degree" : {"$type": "string"}
+                 }}  
+}
