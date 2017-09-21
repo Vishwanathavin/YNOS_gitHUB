@@ -1,0 +1,32 @@
+{
+  "startupID": {
+    "$type": 7
+  },
+  "startupName": {
+    "$type": 2
+  },
+  "city": {
+    "$type": 3
+  },
+  "city.Lat": {
+    "$type": 1
+  },
+  "city.Lon": {
+    "$type": 1
+  },
+  "city.name": {
+    "$type": 2
+  },
+  "investorID.0": {
+    "$exists": true
+  },
+  "investorID": {
+    "$type": 7
+  },
+  "roundInvestmentAmountINR.0": {
+    "$exists": true
+  },
+  "roundInvestmentAmountINR": {
+    "$type": 1
+  }
+}
