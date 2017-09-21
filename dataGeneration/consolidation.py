@@ -12,22 +12,15 @@ def getStartupData(crunchbaseData, internDataFunded, keyurData,viData):
 
     internDataFunded = internVIMerge(internDataFunded, viData)
 
-
     startupData = internKeyurMerge(internDataFunded, keyurData)
 
     # Common Companies between Keyur-Intern
 
     startupData = startupCrunchbaseMerge(startupData, crunchbaseData)
 
-    # Analysis part
-    assert isinstance(startupData, object)
-    missing_startupData = startupData[startupData.isnull().any(axis=1)]
-    missing_startupData.to_csv(path.replace("\\","/")+'/metaOutput/missing _comps_details.csv', index=False, encoding='utf-8')
-    log_file = open(path+'/metaOutput/log_file.txt', 'a')
-    empty_cells = startupData.isnull().sum().sum()
-    log_file.write(str(empty_cells))
-    log_file.write('\n')
-    log_file.close()
+    # Analysis part - new file - analysis report
+    # assert isinstance(startupData, object)
+
     #
     return startupData
 
@@ -39,8 +32,6 @@ def getPersonData(startupData,personData):
     #Purge person Data to the ones that matter
     personData=personData[personData.name.isin(founderNamesInDataset.name) | personData.name.isin(investorNamesInDataset.name) ].reset_index(drop=True)
 
-    #Analysis:
-    # Get the Linkedin Details of founder and investor needed
 
     return personData,startupData
 
@@ -154,13 +145,13 @@ if __name__=='__main__':
 #     #Read InternData
 #     internData = pd.read_csv('./Data/InternData.csv')[internColumns]
 #     internData.Start_up_name = internData.Start_up_name.astype(str)
-#     internData.Start_up_name = internData.Start_up_name.apply(lambda x: x.upper())
+#     internData.Start_up_name = internData.Start_up_name.fillna('').apply(lambda x: x.upper())
 #     if(debug): internDataShape = internData.shape
 #
 #     # Get Keyur Data
 #     keyurData = pd.read_csv('./Data/KeyurData.csv')[keyurColumns]
 #     keyurData.Start_up_name = keyurData.Start_up_name.astype(str)
-#     keyurData.Start_up_name = keyurData.Start_up_name.apply(lambda x: x.upper())
+#     keyurData.Start_up_name = keyurData.Start_up_name.fillna('').apply(lambda x: x.upper())
 #
 #     #Filter out the year in keyur data
 #     keyurData = keyurData[keyurData["DOI"] >= year]
@@ -194,7 +185,7 @@ if __name__=='__main__':
 #     crunchbaseData = crunchbaseData[crunchbaseColumns]
 #     crunchbaseData.rename(columns={'company': 'Start_up_name'}, inplace=True)
 #     crunchbaseData.Start_up_name = crunchbaseData.Start_up_name.astype(str)
-#     crunchbaseData.Start_up_name = crunchbaseData.Start_up_name.apply(lambda x: x.upper())
+#     crunchbaseData.Start_up_name = crunchbaseData.Start_up_name.fillna('').apply(lambda x: x.upper())
 #     if (debug): crunchbaseDataShape = crunchbaseData.shape
 #
 #     # Data Mergin
@@ -219,7 +210,7 @@ if __name__=='__main__':
 #     # VIData = pd.read_csv('./Data/temp_debug/VentureIntelligenceData.csv')[VIColumns]
 #     # VIData.rename(columns={'Company': 'Start_up_name'}, inplace=True)
 #     # VIData.Start_up_name = VIData.Start_up_name.astype(str)
-#     # VIData.Start_up_name = VIData.Start_up_name.apply(lambda x: x.upper())
+#     # VIData.Start_up_name = VIData.Start_up_name.fillna('').apply(lambda x: x.upper())
 #     # if (debug): VIDataShape = VIData.shape
 #     #
 #     #

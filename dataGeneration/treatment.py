@@ -8,9 +8,16 @@ def treatment():
 
 
 
-    path =  os.path.dirname(os.path.abspath(getsourcefile(lambda:0)))
+    path =  os.path.dirname(os.path.abspath(getsourcefile(lambda:0))) # .replace("\\","/")
+    # path = path.replace("\\","/")
     # Assign the columns to pick from each of the data sources
     inpColumn = pd.read_csv(path +'/data/dataFromEachSource.csv')
+    keyurdata=0.0
+    internDataFunded=0.0
+    internDataNonFunded=0.0
+    viData=0.0
+    personData=0.0
+    crunchbaseData=0.0
 
     keyurdata = treatKeyurData(inpColumn,path)
     internDataFunded,internDataNonFunded = treatInternData(inpColumn,path)
@@ -38,7 +45,7 @@ def treatment():
     #                            'Round1 date': 'dealDate'
     #                            }, inplace=True)
     # internData = internData[internColumns]
-    # internData.startupName = internData.startupName.astype(str).apply(lambda x: x.upper())
+    # internData.startupName = internData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
     # internData.startupName = internData.startupName.str.strip()
     # #internData = internData.drop_duplicates(['startupName'])
     # internData.startupName = internData.startupName.str.replace('PVT','').replace('LTD.','').replace('PRIVATE','').replace('LIMITED','')
@@ -57,7 +64,7 @@ def treatment():
     # # 4. Rename columns
     # # 5. Merge Investor names, investment amount
     #
-    # # keyurData.DOI = keyurData.DOI.astype(str)
+    # # keyurData.DOI = keyurData.DOI.astype(str).fillna('')
     #
     # keyurData['DOI'].replace('', np.nan, inplace=True)
     # keyurData = keyurData[(keyurData['DOI'] >= 2014) | (keyurData['DOI'].isnull())]
@@ -90,9 +97,9 @@ def treatment():
     # ##                             NOTE
     # ##                 The sorting of the date, round investment amount has an issue. It is not ordered. Take care
     # #
-    # keyurData.startupName = keyurData.startupName.astype(str).apply(lambda x: x.upper())
+    # keyurData.startupName = keyurData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
     # keyurData.startupName = keyurData.startupName.str.replace('PVT', '').replace('LTD.', '').replace('PRIVATE', '').replace('LIMITED', '')
-    # keyurData.InvestorName = keyurData.InvestorName.astype(str).apply(lambda x: x.upper())
+    # keyurData.InvestorName = keyurData.InvestorName.astype(str).fillna('').apply(lambda x: x.upper())
     #
     # # ---------------------------------------------------------------------
     #
@@ -105,7 +112,7 @@ def treatment():
     # crunchbaseData = pd.read_json(crunchbaseFile, lines=True)
     # crunchbaseData.rename(columns={'company': 'startupName'}, inplace=True)
     # crunchbaseData = crunchbaseData[crunchbaseColumns]
-    # crunchbaseData.startupName = crunchbaseData.startupName.astype(str).apply(lambda x: x.upper())
+    # crunchbaseData.startupName = crunchbaseData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
     #
     # crunchbaseData.startupName = crunchbaseData.startupName.str.replace('PVT', '').replace('LTD.', '').replace('PRIVATE','').replace('LIMITED', '')
     # crunchbaseData.startupName = crunchbaseData.startupName.str.strip()
@@ -117,7 +124,7 @@ def treatment():
     #     val = [crunchbaseData.iloc[index]['founders'][x].encode('ascii', 'ignore') for x in
     #            range(len(crunchbaseData.iloc[index].founders))]
     #     crunchbaseData.founders.iloc[index] = val
-    # crunchbaseData.founders = crunchbaseData.founders.astype(str).apply(lambda x: x.upper())
+    # crunchbaseData.founders = crunchbaseData.founders.astype(str).fillna('').apply(lambda x: x.upper())
     # #
     # # crunchbaseData["founders"].str.split(',').tolist()
     # # crunchbaseData["founders"] = crunchbaseData["founders"].astype(str).replace('u\'', '').replace('\'', '').replace('[','').replace(']', '')
@@ -132,8 +139,8 @@ def treatment():
     # viData.rename(columns={'Company': 'startupName', 'Investors': 'InvestorName'}, inplace=True)
     # viData = viData[VIColumns]
     # # viData = viData.drop_duplicates('startupName')
-    # viData.startupName = viData.startupName.astype(str).apply(lambda x: x.upper())
-    # viData.InvestorName = viData.InvestorName.astype(str).apply(lambda x: x.upper())
+    # viData.startupName = viData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
+    # viData.InvestorName = viData.InvestorName.astype(str).fillna('').apply(lambda x: x.upper())
     # viData.startupName = viData.startupName.str.replace('(', '').str.replace(')','')
     # # Convertthe date of investment
     #
@@ -143,11 +150,11 @@ def treatment():
     # # 3. Convert to pandas
     # invFile = invFile.replace('\n', '').replace('\r', '').replace('}{', '},{')
     # invData = pd.read_json(invFile, lines=True)
-    # invData.name = invData.name.apply(lambda x: x.upper())
+    # invData.name = invData.name.fillna('').apply(lambda x: x.upper())
     # # invData = invData.drop_duplicates('name')
     # founderFile = founderFile.replace('\n', '').replace('\r', '').replace('}{', '},{')
     # founderData = pd.read_json(founderFile, lines=True)
-    # founderData.name = founderData.name.apply(lambda x: x.upper())
+    # founderData.name = founderData.name.fillna('').apply(lambda x: x.upper())
     # # founderData = founderData.drop_duplicates('name')
     # founderData['F_or_I'] = 'F'
     # invData['F_or_I'] = 'I'
@@ -225,7 +232,7 @@ def treatKeyurData(inpColumn,path):
     keyurData.startupName = keyurData.startupName.astype(str).apply(lambda x: x.upper())
     keyurData.startupName = keyurData.startupName.str.replace('PVT.', '').str.replace('LTD.', '').str.replace('PRIVATE','').str.replace('LIMITED', '').str.strip()
     keyurData.InvestorName = keyurData.InvestorName.astype(str).apply(lambda x: x.upper())
-    keyurData.to_csv(path.replace("\\","/")+'/metaOutput/keyurData.csv', index=False)
+    keyurData.to_csv(path+'/metaOutput/keyurData.csv', index=False)
     return keyurData
 
 
@@ -265,7 +272,7 @@ def treatInternData(inpColumn,path):
 
 
 
-    internData['dealDate'] = pd.to_datetime(internData['dealDate'], format="%m/%y")
+    internData['dealDate'] = pd.to_datetime(internData['dealDate'], format="%b-%y")
     internDataNonFunded = internData[internData["dealDate"].isnull()]
     internDataFunded = internData[internData["dealDate"].notnull()]
     # internDataFunded.dealDate = internDataFunded.dealDate.str.replace('January', 'Jan').str.replace \
@@ -280,15 +287,15 @@ def treatInternData(inpColumn,path):
     #     .str.replace('Jun', '06').str.replace('Jul', '07').str.replace \
     #     ('Aug', '08').str.replace('Sep', '09').str.replace('Oct', '10') \
     #     .str.replace('Nov', '11').str.replace('Dec', '12').str.replace('-', '/')
-    # internDataFunded.dealDate = internDataFunded.dealDate.astype(str).apply(lambda x: x.upper())
+    # internDataFunded.dealDate = internDataFunded.dealDate.astype(str).fillna('').apply(lambda x: x.upper())
 
     # internDataFunded.dealDate = internDataFunded.dealDate.str.split('-').tolist()
     #
     # for index, row in internDataFunded.iterrows():
     #     datetime_object = datetime.strptime(row.dealDate[0],row.dealDate[1], '%b %Y')
     #     print datetime_object
-    internDataFunded.to_csv(path.replace("\\","/")+'/metaOutput/internDataFunded.csv', index=False)
-    internDataNonFunded.to_csv(path.replace("\\","/")+'/metaOutput/internDataNonFunded.csv', index=False)
+    internDataFunded.to_csv(path+'/metaOutput/internDataFunded.csv', index=False)
+    internDataNonFunded.to_csv(path+'/metaOutput/internDataNonFunded.csv', index=False)
     return internDataFunded,internDataNonFunded
 
 def treatVIData(inpColumn,path):
@@ -314,7 +321,7 @@ def treatVIData(inpColumn,path):
 
     # Get the date in the same format as keyur Data
 
-    viData.to_csv(path.replace("\\","/")+'/metaOutput/viData.csv', index=False)
+    viData.to_csv(path+'/metaOutput/viData.csv', index=False)
     return viData
 
 #--------------------------------------------------------------------
@@ -362,8 +369,8 @@ def treatPersonData(inpColumn,path):
             seriesList.append(expseries)
     expData = pd.DataFrame(seriesList)
     personData[['name']+['F_or_I']+['file_id']].to_csv(path+'/metaOutput/personData.csv', index=False, encoding='utf-8')
-    expData.to_csv(path.replace("\\","/")+'/metaOutput/expData.csv', index=False, encoding='utf-8')
-    educationData.to_csv(path.replace("\\","/")+'/metaOutput/educationData.csv', index=False, encoding='UTF8')
+    expData.to_csv(path+'/metaOutput/expData.csv', index=False, encoding='utf-8')
+    educationData.to_csv(path+'/metaOutput/educationData.csv', index=False, encoding='UTF8')
     return personData
 
 def treatCrunchbaseData(inpColumn,path):
@@ -394,7 +401,7 @@ def treatCrunchbaseData(inpColumn,path):
         crunchbaseData.founders.iloc[index] = val
     crunchbaseData.founders = crunchbaseData.founders.astype(str).apply(lambda x: x.upper())
 
-    crunchbaseData.to_csv(path.replace("\\","/")+'/metaOutput/crunchbaseData.csv', index=False, encoding='UTF8')
+    crunchbaseData.to_csv(path+'/metaOutput/crunchbaseData.csv', index=False, encoding='UTF8')
 
     return crunchbaseData
 # ---------------------------------------------------------------------------------
@@ -423,7 +430,7 @@ if __name__=='__main__':
     #                           '140 character description':'description',
     #                           'Business model Classification':'businessModel'}, inplace=True)
     # internData=internData[internColumns]
-    # internData.startupName = internData.startupName.astype(str).apply(lambda x: x.upper())
+    # internData.startupName = internData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
     #
     # # ---------------------------------------------------------------------
     #
@@ -448,8 +455,8 @@ if __name__=='__main__':
     #     {'Industry': 'first', 'investorName': lambda x: list(x), 'Deal_Investment_Amount_INR_M': lambda x: list(x),
     #      'DOI': 'first','Source':'first','startupClassification':'first'}).reset_index()
     #
-    # keyurData.startupName = keyurData.startupName.astype(str).apply(lambda x: x.upper())
-    # keyurData.investorName = keyurData.investorName.astype(str).apply(lambda x: x.upper())
+    # keyurData.startupName = keyurData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
+    # keyurData.investorName = keyurData.investorName.astype(str).fillna('').apply(lambda x: x.upper())
     # # print keyurData.columns
     # # keyurData.to_csv('./temp.csv')
     # # ---------------------------------------------------------------------
@@ -463,7 +470,7 @@ if __name__=='__main__':
     # crunchbaseData=pd.read_json(crunchbaseFile,lines=True)
     # crunchbaseData.rename(columns={'company': 'startupName'},inplace=True)
     # crunchbaseData=crunchbaseData[crunchbaseColumns]
-    # crunchbaseData.startupName = crunchbaseData.startupName.astype(str).apply(lambda x: x.upper())
+    # crunchbaseData.startupName = crunchbaseData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
     # crunchbaseData=crunchbaseData.drop_duplicates(['startupName'])
     # # ----------------------------------------------------------------------
     #
@@ -476,7 +483,7 @@ if __name__=='__main__':
     # viData=viData[VIColumns]
     # viData = viData.drop_duplicates('startupName')
     # viData.startupName = viData.startupName.replace('(','').replace(')','')
-    # viData.startupName = viData.startupName.astype(str).apply(lambda x: x.upper())
-    # viData.investorName = viData.investorName.astype(str).apply(lambda x: x.upper())
+    # viData.startupName = viData.startupName.astype(str).fillna('').apply(lambda x: x.upper())
+    # viData.investorName = viData.investorName.astype(str).fillna('').apply(lambda x: x.upper())
     #----------------------------------------------------------------------
 

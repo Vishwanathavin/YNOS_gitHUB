@@ -30,8 +30,8 @@ def topKinvestors(topinvestors):
         for investorindex in range(len(row['InvestorName'])):
             InvList.append(row['InvestorName'][investorindex])
 
-
-    testData = personData[personData['name'].isin(InvList)]
+    personData=personData[personData['F_or_I']=='I']
+    testData = personData[personData['name'].isin(InvList) ]
 
     neigh_list = NearestNeighbors(n_neighbors=10)
     neigh_list.fit(personData.drop(['F_or_I', 'file_id','name'], 1).dropna())

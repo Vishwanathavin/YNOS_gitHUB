@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import codecs
 import os
 from inspect import getsourcefile
 from consolidation import dataConsolidate
@@ -31,7 +32,9 @@ def getPersonParams(personData):
 def getcityCoord(startupData):
     # Getting the co-ordniates from the file
     path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
-    coordData = pd.read_csv(path+'/data/citi_co-ordinates.csv')
+    with codecs.open(path+'/data/citi_co-ordinates.csv', "r", encoding='utf-8', errors='ignore') as coord_data_temp:
+        coordData = pd.read_csv(coord_data_temp)
+    # coordData = pd.read_csv(path+'/data/citi_co-ordinates.csv')
     coordData["City"] = coordData["City"].str.strip()
     coordData.drop_duplicates("City", inplace=True)
 
