@@ -1,20 +1,47 @@
-{  "startupID" : {"$type":"ObjectID","$exists": true},
-   "startupName": {"$type" : "string"},
-   "city" : {"$type" : "Object",
-             "City.name":{"type":"string"},
-             "City.Lon":{"type":"Double"},
-             "City.Lat":{"type":"Double"}
-   },
-   "investorID": {"$type": "array","0":{"$type": "ObjectID"}},
-   "roundInvestmentAmountINR":{"$type": "array","0":{"$type": "double"}},
-   "dealDate":{"$type": "array","0":{"$type": "Date"}},
-   "startupClassification" :  {"$type" : "string"},
-   "founderID": {"$type": "array","0":{"$type": "ObjectID"}},
-   "Source":{"$type" : "string"},
-   "ICB_Sector":{"$type" : "string"},
-   "ICB_Industry":{"$type" : "string"},
-   "groupClassification":{"$type": "array","0":{"$type": "string"}},
-   "businessModel":{"$type" : "string"}
-} 
-
-
+{
+  "startupID": {
+    "$type": 2
+  },
+  "startupName": {
+    "$type": 2
+  },
+  "city": {
+    "$type": 2
+  },
+  "Lon": {
+    "$type": 1
+  },
+  "Lat": {
+    "$type": 1
+  },
+  "investorID": {
+    "$type": 2
+  },
+  "roundInvestmentAmountINR": {
+    "$type": 1
+  },
+  "dealDate": {
+    "$type": 9
+  },
+  "startupClassification": {
+    "$type": 2
+  },
+  "founderID": {
+    "$type": 2
+  },
+  "Source": {
+    "$type": 2
+  },
+  "ICB_Sector": {
+    "$type": 2
+  },
+  "ICB_Industry": {
+    "$type": 2
+  },
+  "groupClassification": {
+    "$type": 2
+  },
+  "businessModel": {
+    "$type": 2
+  }
+}
