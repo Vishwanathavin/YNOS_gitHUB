@@ -1,32 +1,20 @@
-{
-  "startupID": {
-    "$type": 7
-  },
-  "startupName": {
-    "$type": 2
-  },
-  "city": {
-    "$type": 3
-  },
-  "city.Lat": {
-    "$type": 1
-  },
-  "city.Lon": {
-    "$type": 1
-  },
-  "city.name": {
-    "$type": 2
-  },
-  "investorID.0": {
-    "$exists": true
-  },
-  "investorID": {
-    "$type": 7
-  },
-  "roundInvestmentAmountINR.0": {
-    "$exists": true
-  },
-  "roundInvestmentAmountINR": {
-    "$type": 1
-  }
-}
+{  "startupID" : {"$type":"ObjectID","$exists": true},
+   "startupName": {"$type" : "string"},
+   "city" : {"$type" : "Object",
+             "City.name":{"type":"string"},
+             "City.Lon":{"type":"Double"},
+             "City.Lat":{"type":"Double"}
+   },
+   "investorID": {"$type": "array","0":{"$type": "ObjectID"}},
+   "roundInvestmentAmountINR":{"$type": "array","0":{"$type": "double"}},
+   "dealDate":{"$type": "array","0":{"$type": "Date"}},
+   "startupClassification" :  {"$type" : "string"},
+   "founderID": {"$type": "array","0":{"$type": "ObjectID"}},
+   "Source":{"$type" : "string"},
+   "ICB_Sector":{"$type" : "string"},
+   "ICB_Industry":{"$type" : "string"},
+   "groupClassification":{"$type": "array","0":{"$type": "string"}},
+   "businessModel":{"$type" : "string"}
+} 
+
+
