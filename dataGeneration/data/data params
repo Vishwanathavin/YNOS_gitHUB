@@ -1,38 +1,45 @@
 Intern Data: 
 
-Source,
+    'Source':
+    'Start-up Name':
+    'Date of Inc':
+    '140 character description':
+    'Industry':
+    'Sector':
+    'Start up clissification':
+    'Start up clissification 2':
+    'Business model Classification':
+    'Keyword1':
+    'Keyword2':
+    'Keyword3':
+    'City':
+    'State':
+    'Status':
+    'Gorup Classification 1':
+    'Gorup Classification 2':
+    'Gorup Classification 3':
+    'Round1 date':
+    'Round1 Total investors':
+    'Round1 Lead Investor type':
+    'Round1 Investment amount (Rupees Crores)':
+    'Round1 Valuation (Rupees, Crores)':
+    'Round2 date':
+    'Round2 Total investors':
+    'Round2 Lead Investor type':
+    'Round2 Investment amount (Rupees Crores)':
+    'Round2 Valuation (Rupees Crores)':
+    'Round3 date':
+    'Round3 Total investors':
+    'Round3 Lead Investor type':
+    'Round3 Investment amount (Rupees, Crores)':
+    'Round3 Valuation (Rupees Crores)':
 
-Start-up Name,
+    Omitted:
 
-Date of Inc,
+        Incubator, Incubator date, Result, ( Not available)
 
-140 character description,
+        Accelerator, Acclerator date, Result of accelaratot, ( Not available)
 
-Industry, Sector,
-
-Start up clissification, Start up clissification 2  
-
-Business model Classification ,
-
- 
-
-Keyword1, Keyword2, Keyword3,
-
-City, State,
-
-Status,
-
-Gorup Classification 1, Gorup Classification 2, Gorup Classification 3,
-
-Incubator, Incubator date, Result, ( Not available)
-
-# COnsider Foundernames
-
-Accelerator, Acclerator date, Result of accelaratot, ( Not available)
-
-Round1 date, Round1 Total investors, Round1 Lead Investor type, Round1 Investment amount (Rupees Crores), Round1 Valuation (Rupees, Crores)
-
- 
 
 Keyur: 
 
