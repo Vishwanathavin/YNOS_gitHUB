@@ -1,9 +1,10 @@
 import pandas as pd
-import numpy as np
+
 from inspect import getsourcefile
 import codecs #to handle errors while loading file.
-import datetime
+
 import os
+import json
 def treatment():
 
 
@@ -22,8 +23,8 @@ def treatment():
     # keyurdata = treatKeyurData(inpColumn,path)
     # internDataFunded,internDataNonFunded = treatInternData(inpColumn,path)
     # viData = treatVIData(inpColumn,path)
-    # personData = treatPersonData(inpColumn,path)
-    crunchbaseData = treatCrunchbaseData(inpColumn,path)
+    personData = treatPersonData(inpColumn,path)
+    # crunchbaseData = treatCrunchbaseData(inpColumn,path)
 
 
 
@@ -228,6 +229,8 @@ def treatPersonData(inpColumn,path):
     invData['F_or_I'] = 'I'
     personData = founderData.append(invData)
 
+
+
     # seriesList = []
     # for row in range(personData.shape[0]):
     #     for schoolIndex in range(len(personData.iloc[row]["schools"])):
@@ -254,11 +257,16 @@ def treatPersonData(inpColumn,path):
     # personData[['name']+['F_or_I']+['file_id']].to_csv(path+'/metaOutput/personData.csv', index=False, encoding='utf-8')
     # expData.to_csv(path+'/metaOutput/expData.csv', index=False, encoding='utf-8')
     # educationData.to_csv(path+'/metaOutput/educationData.csv', index=False, encoding='UTF8')
+    f = open(path+'/metaOutput/personData.json', "w")
+    for index,row in personData.iterrows():
+        row.to_json(f)
+        f.write("\n")
+        row.to_json(f)
     return personData
 
 def treatCrunchbaseData(inpColumn,path):
     crunchbaseColumns = inpColumn['crunchbaseColumns'].dropna().tolist()
-    crunchbaseFile = open(path + '/data/startupProfiles.json').read()
+    crunchbaseFile = codecs.open(path + '/data/startupProfiles.json', "r", encoding='utf-8', errors='ignore').read()
     # ---------------------------------------------------------------------
 
     # Crunchbase file
@@ -275,12 +283,12 @@ def treatCrunchbaseData(inpColumn,path):
     crunchbaseData = crunchbaseData[crunchbaseColumns]
     crunchbaseData.startupName = crunchbaseData.startupName.astype(str).apply(lambda x: x.upper())
     crunchbaseData.city = crunchbaseData.city.str.split(',').tolist()
-    # crunchbaseData.city = crunchbaseData.city.str.split(',').tolist()
+    crunchbaseData.city = crunchbaseData.city.apply(lambda x: x[0])
     crunchbaseData.startupName = crunchbaseData.startupName.str.replace('PVT', '').replace('LTD.', '').replace(
         'PRIVATE', '').replace('LIMITED', '')
     crunchbaseData.startupName = crunchbaseData.startupName.str.strip()
     crunchbaseData = crunchbaseData.drop_duplicates(['startupName']).reset_index(drop=True)
-    crunchbaseData = crunchbaseData[crunchbaseData.astype(str)['founderName'] != '[]'].reset_index(drop=True)
+    crunchbaseData = crunchbaseData[crunchbaseData['founderName'] != '[]'].reset_index(drop=True)
     for index in range(crunchbaseData.shape[0]):
         # print index,crunchbaseData.iloc[index].startupName,len(crunchbaseData.iloc[index].founders),crunchbaseData.iloc[index].founders
         val = [crunchbaseData.iloc[index]['founderName'][x].encode('ascii', 'ignore') for x in
