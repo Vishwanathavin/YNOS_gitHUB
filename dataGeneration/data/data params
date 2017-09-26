@@ -43,32 +43,34 @@ Intern Data:
 
 Keyur: 
 
- 
-
-Source  
-
-Company Name  
-
-ICB Industry ICB Sector 
-
-Start up Classification 
-
-DOI 
-
-Investor Name Age Investor City links Investor Type 1 (Angel / Institutional Investor/ Boutique / Corporate / Network) 
-
-Deal investment amount and round investment amount [base year ] 
-
- Stage of Investment ( Seed / Early) New Stage Classification Announcement Date 
-
-
-
-
- ##### Complete other params from keyur
+    source
+    startupName
+    ICB_industry
+    ICB_sector
+    startupClassification
+    foundedDate
+    investorName
+    linkedinURL
+    investorType
+    dealInvestmentAmount
+    roundInvestmentAmount
+    investmentStage
+    stageClassification
+    roundDate
+    equityValuation
+    city
+    state
+    companyWebsite
 
 
+vi data:
+Investors
 
- ### Get other params from the VI data, crunchbase and linkedin
+Crunchbase:
+ website
+ hq
+ founded year
+ founders
 
 
  ### Get the params for consolidation 
