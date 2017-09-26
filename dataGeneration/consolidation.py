@@ -12,17 +12,17 @@ def getStartupData(crunchbaseData, internDataFunded, keyurData,viData):
 
     internDataFunded = internVIMerge(internDataFunded, viData)
 
-    startupData = internKeyurMerge(internDataFunded, keyurData)
+    # startupData = internKeyurMerge(internDataFunded, keyurData)
 
     # Common Companies between Keyur-Intern
 
-    startupData = startupCrunchbaseMerge(startupData, crunchbaseData)
+    # startupData = startupCrunchbaseMerge(startupData, crunchbaseData)
 
     # Analysis part - new file - analysis report
     # assert isinstance(startupData, object)
 
     #
-    return startupData
+    return internDataFunded
 
 def getPersonData(startupData,personData):
 
@@ -94,24 +94,24 @@ def getPersonData(startupData,personData):
 
 def dataConsolidate():
     path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
-    if (os.path.exists(path+'/metaOutput/educationData.csv')):
+    if (os.path.exists(path+'/metaOutput/internDataFunded.csv')):
         # expData = pd.read_csv('./metaOutput/expData.csv')
         viData = pd.read_csv(path+'/metaOutput/viData.csv')
         crunchbaseData = pd.read_csv(path+'/metaOutput/crunchbaseData.csv')
         internDataFunded = pd.read_csv(path+'/metaOutput/internDataFunded.csv')
         # internDataNonFunded = pd.read_csv('./metaOutput/internDataNonFunded.csv')
         keyurData = pd.read_csv(path+'/metaOutput/keyurData.csv')
-        personData=pd.read_csv(path+'/metaOutput/personData.csv')
+
     else:
-        keyurData,internDataFunded, internDataNonFunded, viData,personData, crunchbaseData  = treatment()
+        keyurData,internDataFunded, internDataNonFunded, viData,crunchbaseData  = treatment()
 
     startupData = getStartupData(crunchbaseData, internDataFunded, keyurData,viData)
 
-    personData,startupData = getPersonData(startupData,personData)
-    startupData.to_csv(path.replace("\\","/")+'/output/startupData.csv', index=False)
-    personData.to_csv(path.replace("\\","/")+'/output/personData.csv', index=False)
+    # personData,startupData = getPersonData(startupData,personData)
+    startupData.to_csv(path+'/output/startupData.csv', index=False)
+    # personData.to_csv(path.replace("\\","/")+'/output/personData.csv', index=False)
 
-    return startupData, personData
+    return startupData
 
 
 

@@ -20,16 +20,16 @@ def treatment():
     personData=0.0
     crunchbaseData=0.0
 
-    # keyurdata = treatKeyurData(inpColumn,path)
-    # internDataFunded,internDataNonFunded = treatInternData(inpColumn,path)
-    # viData = treatVIData(inpColumn,path)
+    keyurdata = treatKeyurData(inpColumn,path)
+    internDataFunded,internDataNonFunded = treatInternData(inpColumn,path)
+    viData = treatVIData(inpColumn,path)
     personData = treatPersonData(inpColumn,path)
-    # crunchbaseData = treatCrunchbaseData(inpColumn,path)
+    crunchbaseData = treatCrunchbaseData(inpColumn,path)
 
 
 
 
-    return keyurdata,internDataFunded,internDataNonFunded,viData,personData,crunchbaseData
+    return keyurdata,internDataFunded,internDataNonFunded,viData,crunchbaseData
 
 def treatKeyurData(inpColumn,path):
 
@@ -153,11 +153,11 @@ def treatInternData(inpColumn,path):
         'Gorup Classification 1': 	'groupClassification1',
         'Gorup Classification 2': 	'groupClassification2',
         'Gorup Classification 3': 	'groupClassification3',
-        'Round1 date': 	'round1Date',
-        'Round1 Total investors': 	'round1InvestorCount',
-        'Round1 Lead Investor type': 	'round1leadInvestorType',
-        'Round1 Investment amount (Rupees Crores)': 	'round1InvestmentAmount',
-        'Round1 Valuation (Rupees, Crores)': 	'round1Valuation',
+        'Round1 date': 	'roundDate',
+        'Round1 Total investors': 	'roundInvestorCount',
+        'Round1 Lead Investor type': 	'roundLeadInvestorType',
+        'Round1 Investment amount (Rupees Crores)': 	'roundInvestmentAmount',
+        'Round1 Valuation (Rupees, Crores)': 	'roundValuation',
         'Round2 date': 	'round2Date',
         'Round2 Total investors': 	'round2InvestorCount',
         'Round2 Lead Investor type': 	'round2leadInvestorType',
@@ -177,9 +177,9 @@ def treatInternData(inpColumn,path):
 
 
 
-    internData['round1Date'] = pd.to_datetime(internData['round1Date'], format="%m/%y")
-    internDataNonFunded = internData[internData["round1Date"].isnull()]
-    internDataFunded = internData[internData["round1Date"].notnull()]
+    internData['roundDate'] = pd.to_datetime(internData['roundDate'], format="%m/%y")
+    internDataNonFunded = internData[internData["roundDate"].isnull()]
+    internDataFunded = internData[internData["roundDate"].notnull()]
 
     internDataFunded.to_csv(path+'/metaOutput/internDataFunded.csv', index=False)
     internDataNonFunded.to_csv(path+'/metaOutput/internDataNonFunded.csv', index=False)
@@ -197,13 +197,16 @@ def treatVIData(inpColumn,path):
     # 2. Convert startup Name to upper case
     # Change column name
 
-    viData.rename(columns={'Company': 'startupName', 'Investors': 'investorName'}, inplace=True)
+    viData.rename(columns={'Company': 'startupName', 'Investors': 'investorName','Date':'roundDate'}, inplace=True)
     viData = viData[VIColumns]
     # viData = viData.drop_duplicates('startupName')
     viData.startupName = viData.startupName.astype(str).apply(lambda x: x.upper())
     viData.investorName = viData.investorName.astype(str).apply(lambda x: x.upper())
     viData.startupName = viData.startupName.str.replace('(', '').str.replace(')', '')
 
+    viData['roundDate'] = pd.to_datetime(viData['roundDate'], format="%B-%Y")
+
+    # Get the date in the same format as keyur Data
 
     viData.to_csv(path+'/metaOutput/viData.csv', index=False)
     return viData
@@ -397,8 +400,8 @@ if __name__=='__main__':
     #                            'Gorup Classification 3': 'groupClassification3',
     #                            '140 character description': 'description',
     #                            'Business model Classification': 'businessModel',
-    #                            'Round1 Investment amount (Rupees Crores)': 'investmentAmount',
-    #                            'Round1 date': 'dealDate'
+    #                            'round Investment amount (Rupees Crores)': 'investmentAmount',
+    #                            'round date': 'dealDate'
     #                            }, inplace=True)
     # internData = internData[internColumns]
     # internData.startupName = internData.startupName.astype(str).fillna('').apply(lambda x: x.upper())

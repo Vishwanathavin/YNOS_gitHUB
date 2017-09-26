@@ -1,22 +1,22 @@
 import pandas as pd
 
 def internVIMerge(internDataFunded, viData):
-    commonData = pd.merge(internDataFunded, viData, how='inner',left_on=['startupName', 'dealDate'],right_on=['startupName', 'dealDate'])
-    internDataFunded = pd.merge(internDataFunded,commonData,how='outer',on=['startupName','dealDate','City','startupClassification','Round_Investment_Amount_INR'])
-
-    internDataFunded = internDataFunded.groupby(["startupName"]).agg(
-        {'InvestorName': lambda x: list(x),
-         'City': 'first', 'startupClassification': 'first',
-         'Round_Investment_Amount_INR': lambda x: list(x),
-         'dealDate': lambda x: list(x)}).reset_index()
-    for index, row in internDataFunded.iterrows():
-        row['InvestorName'] = [x for y, x in sorted(zip(row['dealDate'], row['InvestorName']))]
-        row['Round_Investment_Amount_INR'] = [x for y, x in sorted(
-            zip(row['dealDate'], row['Round_Investment_Amount_INR']))]
-        row['dealDate'] = sorted(row['dealDate'])
-        internDataFunded.iloc[index] = row
-
-    return internDataFunded
+    commonData = pd.merge(internDataFunded, viData, how='inner',left_on=['startupName', 'roundDate'],right_on=['startupName', 'roundDate'])
+    # internDataFunded = pd.merge(internDataFunded,commonData,how='outer',on=['startupName','dealDate','City','startupClassification','Round_Investment_Amount_INR'])
+    #
+    # internDataFunded = internDataFunded.groupby(["startupName"]).agg(
+    #     {'InvestorName': lambda x: list(x),
+    #      'City': 'first', 'startupClassification': 'first',
+    #      'Round_Investment_Amount_INR': lambda x: list(x),
+    #      'dealDate': lambda x: list(x)}).reset_index()
+    # for index, row in internDataFunded.iterrows():
+    #     row['InvestorName'] = [x for y, x in sorted(zip(row['dealDate'], row['InvestorName']))]
+    #     row['Round_Investment_Amount_INR'] = [x for y, x in sorted(
+    #         zip(row['dealDate'], row['Round_Investment_Amount_INR']))]
+    #     row['dealDate'] = sorted(row['dealDate'])
+    #     internDataFunded.iloc[index] = row
+    #
+    return commonData
 
 def internKeyurMerge(internDataFunded,keyurData):
 

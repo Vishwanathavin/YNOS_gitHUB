@@ -1,7 +1,7 @@
 internColumns,keyurColumns,crunchbaseColumns,VIColumns
 source,source,startupName,startupName
 startupName,startupName,founderName,investorName
-foundedDate,ICB_industry,website,
+foundedDate,ICB_industry,website,roundDate
 description,ICB_sector,city,
 ICB_industry,startupClassification,,
 ICB_sector,foundedDate,,
@@ -17,11 +17,11 @@ startupStatus,equityValuation,,
 groupClassification1,city,,
 groupClassification2,state,,
 groupClassification3,companyWebsite,,
-round1Date,,,
-round1InvestorCount,,,
-round1leadInvestorType,,,
-round1InvestmentAmount,,,
-round1Valuation,,,
+roundDate,,,
+roundInvestorCount,,,
+roundLeadInvestorType,,,
+roundInvestmentAmount,,,
+roundValuation,,,
 round2Date,,,
 round2InvestorCount,,,
 round2leadInvestorType,,,
