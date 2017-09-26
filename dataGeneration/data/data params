@@ -1,0 +1,72 @@
+Intern Data: 
+
+Source  
+
+Start-up Name  
+
+Date of Inc  
+
+140 character description  
+
+Industry, Sector  
+
+Start up clissification, Start up clissification 2  
+
+Business model Classification 
+
+ 
+
+Keyword1 Keyword2 Keyword3  
+
+City State  
+
+Status  
+
+Gorup Classification 1 Gorup Classification 2 Gorup Classification 3  
+
+Incubator Incubator date Result 
+
+Accelerator Acclerator date Result of accelaratot 
+
+Round1 date, Round1 Total investors, Round1 Lead Investor type, Round1 Investment amount (Rupees Crores), Round1 Valuation (Rupees, Crores) 
+
+ 
+
+Keyur: 
+
+ 
+
+Source  
+
+Company Name  
+
+ICB Industry ICB Sector 
+
+Start up Classification 
+
+DOI 
+
+Investor Name Age Investor City links Investor Type 1 (Angel / Institutional Investor/ Boutique / Corporate / Network) 
+
+Deal investment amount and round investment amount [base year ] 
+
+ Stage of Investment ( Seed / Early) New Stage Classification Announcement Date 
+
+
+
+
+ ##### Complete other params from keyur
+
+
+
+ ### Get other params from the VI data, crunchbase and linkedin
+
+
+ ### Get the params for consolidation 
+
+ 	1. intern + VI
+ 	2. (intern + VI) + Keyur
+ 	3. ((intern + VI) + Keyur)+ Crunchbase
+
+## make a list of changes or points to be noted ( This will be updatedpost showing the output to sir) 	
+
