@@ -1,0 +1,31 @@
+Earlier: treatment -> Consolidation -> adding params -> Generate vector -> Algorithm
+
+Now: treatment -> consolidation -> add params ( only city coords) -> validate the datatype -> Push to database -> generate vector - >Algorithm
+
+
+Focus needed: 
+Treatment ( Adding new params)
+consolidation (MMergin new params into a list)
+Check the city type ( Till this point, it is one time operation)
+
+validation function at application level ( This is a continuous operation) We need to pass every value through this ( We need to convert the types and print them to see if they are ok) : Check deal date, lat lon etc
+
+Database validation function (make sure the datatype in the schema is also right)
+
+Indexing maybe?
+
+
+Ask arun: 
+
+How to have a continuos updating concept: 
+How do we have the reporting of missing values ( from database or before we push to database)
+how will algortithm work? Where will it be connected
+should we include all the data at once into the database
+How will the algorithm pick value from database ( should we generate and keep the params as new colums)
+Indexin? next?
+where will the new guys data sit
+
+Bugs:
+
+Deal date
+Lat lon :how to merget them into city
