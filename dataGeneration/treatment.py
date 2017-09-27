@@ -2,7 +2,7 @@ import pandas as pd
 
 from inspect import getsourcefile
 import codecs #to handle errors while loading file.
-
+import numpy as np
 import os
 import json
 def treatment():
@@ -21,7 +21,8 @@ def treatment():
     crunchbaseData=0.0
 
     keyurdata = treatKeyurData(inpColumn,path)
-    internDataFunded,internDataNonFunded = treatInternData(inpColumn,path)
+    internData= treatInternData(inpColumn,path)
+    # internDataFunded,internDataNonFunded = treatInternData(inpColumn,path)
     viData = treatVIData(inpColumn,path)
     personData = treatPersonData(inpColumn,path)
     crunchbaseData = treatCrunchbaseData(inpColumn,path)
@@ -29,7 +30,7 @@ def treatment():
 
 
 
-    return keyurdata,internDataFunded,internDataNonFunded,viData,crunchbaseData
+    return keyurdata,internData,viData,crunchbaseData
 
 def treatKeyurData(inpColumn,path):
 
@@ -153,37 +154,77 @@ def treatInternData(inpColumn,path):
         'Gorup Classification 1': 	'groupClassification1',
         'Gorup Classification 2': 	'groupClassification2',
         'Gorup Classification 3': 	'groupClassification3',
-        'Round1 date': 	'roundDate',
-        'Round1 Total investors': 	'roundInvestorCount',
-        'Round1 Lead Investor type': 	'roundLeadInvestorType',
-        'Round1 Investment amount (Rupees Crores)': 	'roundInvestmentAmount',
-        'Round1 Valuation (Rupees, Crores)': 	'roundValuation',
+        'Round1 date': 	'round1Date',
+        'Round1 Total investors': 	'round1InvestorCount',
+        'Round1 Lead Investor type': 	'round1LeadInvestorType',
+        'Round1 Investment amount (Rupees Crores)': 	'round1InvestmentAmount',
+        'Round1 Valuation (Rupees, Crores)': 	'round1Valuation',
         'Round2 date': 	'round2Date',
         'Round2 Total investors': 	'round2InvestorCount',
-        'Round2 Lead Investor type': 	'round2leadInvestorType',
+        'Round2 Lead Investor type': 	'round2LeadInvestorType',
         'Round2 Investment amount (Rupees Crores)': 	'round2InvestmentAmount',
         'Round2 Valuation (Rupees Crores)': 	'round2Valuation',
         'Round3 date': 	'round3Date',
         'Round3 Total investors': 	'round3InvestorCount',
-        'Round3 Lead Investor type': 	'round3leadInvestorType',
+        'Round3 Lead Investor type': 	'round3LeadInvestorType',
         'Round3 Investment amount (Rupees, Crores)': 	'round3InvestmentAmount',
         'Round3 Valuation (Rupees Crores)':	'round3Valuation'
                                }, inplace=True)
     internData = internData[internColumns]
+
     internData.startupName = internData.startupName.astype(str).apply(lambda x: x.upper())
     internData.startupName = internData.startupName.str.strip()
 
     internData.startupName = internData.startupName.str.replace('PVT', '').str.replace('LTD.', '').str.replace('PRIVATE','').str.replace('LIMITED', '')
 
+    # Do all the merging of the columns. Convert into array whereever possible
+    internData['round1Date'] = pd.to_datetime(internData['round1Date'], format="%m/%y")
+    internData['round2Date'] = pd.to_datetime(internData['round2Date'], format="%m/%y")
+    internData['round3Date'] = pd.to_datetime(internData['round3Date'], format="%m/%y")
+    internData['foundedDate'] = pd.to_datetime(internData['foundedDate'], format='%Y.0')
+
+    internData.fillna('',inplace=True)
+    internData['startupClassification'] = [list(val) for val in(zip(internData['startupClassification'],internData['startupClassification2']))]
+    internData['keyword'] = [list(val) for val in(zip(internData['keyword1'],internData['keyword2'],internData['keyword3']))]
+    internData['groupClassification'] = [list(val) for val in (zip(internData['groupClassification1'],internData['groupClassification2'],internData['groupClassification3']))]
+    internData['roundDate'] = [list(val) for val in(zip(internData['round1Date'],internData['round2Date'],internData['round3Date']))]
+    internData['roundInvestorCount'] = [list(val) for val in(zip(internData['round1InvestorCount'],internData['round2InvestorCount'],internData['round3InvestorCount']))]
+    internData['roundLeadInvestorType'] = [list(val) for val in(zip(internData['round1LeadInvestorType'],internData['round2LeadInvestorType'],internData['round3LeadInvestorType']))]
+    internData['roundInvestmentAmount'] = [list(val) for val in(zip(internData['round1InvestmentAmount'],internData['round2InvestmentAmount'],internData['round2InvestmentAmount']))]
+    internData['roundValuation'] = [list(val) for val in(zip(internData['round1Valuation'],internData['round2Valuation'],internData['round3Valuation']))]
 
 
-    internData['roundDate'] = pd.to_datetime(internData['roundDate'], format="%m/%y")
-    internDataNonFunded = internData[internData["roundDate"].isnull()]
-    internDataFunded = internData[internData["roundDate"].notnull()]
-
-    internDataFunded.to_csv(path+'/metaOutput/internDataFunded.csv', index=False)
-    internDataNonFunded.to_csv(path+'/metaOutput/internDataNonFunded.csv', index=False)
-    return internDataFunded,internDataNonFunded
+    dropColumns = ['startupClassification2',
+                    'keyword1',
+                    'keyword2',
+                    'keyword3',
+                    'groupClassification1',
+                    'groupClassification2',
+                    'groupClassification3',
+                    'round1Date',
+                    'round1InvestorCount',
+                    'round1LeadInvestorType',
+                    'round1InvestmentAmount',
+                    'round1Valuation',
+                    'round2Date',
+                    'round2InvestorCount',
+                    'round2LeadInvestorType',
+                    'round2InvestmentAmount',
+                    'round2Valuation',
+                    'round3Date',
+                    'round3InvestorCount',
+                    'round3LeadInvestorType',
+                    'round3InvestmentAmount',
+                    'round3Valuation']
+    internData.drop( dropColumns,axis=1,inplace=True)
+    # internDataNonFunded.drop(dropColumns,axis=1,inplace=True)
+    #
+    # # internDataNonFunded = internData.loc[:,"roundDate"][0]
+    # # internDataFunded = internData.loc[:,"roundDate"][0].notnull()
+    # internDataFunded.to_csv(path+'/metaOutput/internDataFunded.csv', index=False)
+    # internDataNonFunded.to_csv(path+'/metaOutput/internDataNonFunded.csv', index=False)
+    internData.to_csv(path+'/metaOutput/internData.csv', index=False)
+    return internData
 
 def treatVIData(inpColumn,path):
     VIColumns = inpColumn['VIColumns'].dropna().tolist()
@@ -197,14 +238,14 @@ def treatVIData(inpColumn,path):
     # 2. Convert startup Name to upper case
     # Change column name
 
-    viData.rename(columns={'Company': 'startupName', 'Investors': 'investorName','Date':'roundDate'}, inplace=True)
+    viData.rename(columns={'Company': 'startupName', 'Investors': 'investorName'}, inplace=True)
     viData = viData[VIColumns]
     # viData = viData.drop_duplicates('startupName')
     viData.startupName = viData.startupName.astype(str).apply(lambda x: x.upper())
     viData.investorName = viData.investorName.astype(str).apply(lambda x: x.upper())
     viData.startupName = viData.startupName.str.replace('(', '').str.replace(')', '')
 
-    viData['roundDate'] = pd.to_datetime(viData['roundDate'], format="%B-%Y")
+    # viData['roundDate'] = pd.to_datetime(viData['roundDate'], format="%B-%Y")
 
     # Get the date in the same format as keyur Data
 
