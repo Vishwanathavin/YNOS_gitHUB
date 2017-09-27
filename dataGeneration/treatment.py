@@ -173,7 +173,7 @@ def treatInternData(inpColumn,path):
     internData.startupName = internData.startupName.astype(str).apply(lambda x: x.upper())
     internData.startupName = internData.startupName.str.strip()
 
-    internData.startupName = internData.startupName.str.replace('PVT', '').replace('LTD.', '').replace('PRIVATE','').replace('LIMITED', '')
+    internData.startupName = internData.startupName.str.replace('PVT', '').str.replace('LTD.', '').str.replace('PRIVATE','').str.replace('LIMITED', '')
 
 
 
