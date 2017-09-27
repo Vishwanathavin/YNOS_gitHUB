@@ -43,24 +43,24 @@ Intern Data:
 
 Keyur: 
 
-    source
-    startupName
-    ICB_industry
-    ICB_sector
-    startupClassification
-    foundedDate
-    investorName
-    linkedinURL
-    investorType
-    dealInvestmentAmount
-    roundInvestmentAmount
-    investmentStage
-    stageClassification
-    roundDate
-    equityValuation
-    city
-    state
-    companyWebsite
+    'source'
+'startupName'
+'ICB_industry'
+'ICB_sector'
+'startupClassification'
+'foundedDate'
+'investorName'
+'linkedinURL'
+'investorType'
+'dealInvestmentAmount'
+'roundInvestmentAmount'
+'investmentStage'
+'stageClassification'
+'roundDate'
+'equityValuation'
+'city'
+'state'
+'companyWebsite'
 
 
 vi data:

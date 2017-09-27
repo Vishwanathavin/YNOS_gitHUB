@@ -7,22 +7,26 @@ from mergingRoutines import internVIMerge, internKeyurMerge, startupCrunchbaseMe
 from treatment import treatment
 
 
-def getStartupData(crunchbaseData, internDataFunded, keyurData,viData):
+def getStartupData(crunchbaseData, internData, keyurData,viData):
     path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
 
-    internDataFunded = internVIMerge(internDataFunded, viData)
+    # path = path.replace("\\","/")
+    # # Assign the columns to pick from each of the data sources
+    # inpColumn = pd.read_csv(path + '/data/dataFromEachSource.csv')
 
-    # startupData = internKeyurMerge(internDataFunded, keyurData)
+    internData = internVIMerge(internData, viData)
+
+    startupData = internKeyurMerge(internData, keyurData)
 
     # Common Companies between Keyur-Intern
 
-    # startupData = startupCrunchbaseMerge(startupData, crunchbaseData)
+    startupData = startupCrunchbaseMerge(startupData, crunchbaseData)
 
     # Analysis part - new file - analysis report
     # assert isinstance(startupData, object)
 
     #
-    return internDataFunded
+    return startupData
 
 def getPersonData(startupData,personData):
 
@@ -94,18 +98,19 @@ def getPersonData(startupData,personData):
 
 def dataConsolidate():
     path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
-    if (os.path.exists(path+'/metaOutput/internDataFunded.csv')):
+    if (os.path.exists(path+'/metaOutput/internData.csv')):
         # expData = pd.read_csv('./metaOutput/expData.csv')
         viData = pd.read_csv(path+'/metaOutput/viData.csv')
         crunchbaseData = pd.read_csv(path+'/metaOutput/crunchbaseData.csv')
-        internDataFunded = pd.read_csv(path+'/metaOutput/internDataFunded.csv')
+        internData = pd.read_csv(path+'/metaOutput/internData.csv')
+        # internDataFunded = pd.read_csv(path+'/metaOutput/internData.csv')
         # internDataNonFunded = pd.read_csv('./metaOutput/internDataNonFunded.csv')
         keyurData = pd.read_csv(path+'/metaOutput/keyurData.csv')
 
     else:
-        keyurData,internDataFunded, internDataNonFunded, viData,crunchbaseData  = treatment()
+        keyurData,internData, viData,crunchbaseData  = treatment()
 
-    startupData = getStartupData(crunchbaseData, internDataFunded, keyurData,viData)
+    startupData = getStartupData(crunchbaseData, internData, keyurData,viData)
 
     # personData,startupData = getPersonData(startupData,personData)
     startupData.to_csv(path+'/output/startupData.csv', index=False)

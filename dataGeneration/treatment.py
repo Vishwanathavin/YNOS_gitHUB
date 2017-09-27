@@ -7,8 +7,6 @@ import os
 import json
 def treatment():
 
-
-
     path =  os.path.dirname(os.path.abspath(getsourcefile(lambda:0))) # .replace("\\","/")
     # path = path.replace("\\","/")
     # Assign the columns to pick from each of the data sources
