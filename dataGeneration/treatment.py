@@ -12,23 +12,22 @@ def treatment():
     # Assign the columns to pick from each of the data sources
     inpColumn = pd.read_csv(path +'/data/dataFromEachSource.csv')
     keyurdata=0.0
-    internDataFunded=0.0
-    internDataNonFunded=0.0
+    internData=0.0
     viData=0.0
     personData=0.0
     crunchbaseData=0.0
 
-    keyurdata = treatKeyurData(inpColumn,path)
+    # keyurdata = treatKeyurData(inpColumn,path)
     internData= treatInternData(inpColumn,path)
     # internDataFunded,internDataNonFunded = treatInternData(inpColumn,path)
-    viData = treatVIData(inpColumn,path)
-    personData = treatPersonData(inpColumn,path)
-    crunchbaseData = treatCrunchbaseData(inpColumn,path)
+    # viData = treatVIData(inpColumn,path)
+    # personData = treatPersonData(inpColumn,path)
+    # crunchbaseData = treatCrunchbaseData(inpColumn,path)
 
 
 
 
-    return keyurdata,internData,viData,crunchbaseData
+    return keyurdata,internData,viData,crunchbaseData,personData
 
 def treatKeyurData(inpColumn,path):
 
@@ -188,7 +187,7 @@ def treatInternData(inpColumn,path):
     internData['roundDate'] = [list(val) for val in(zip(internData['round1Date'],internData['round2Date'],internData['round3Date']))]
     internData['roundInvestorCount'] = [list(val) for val in(zip(internData['round1InvestorCount'],internData['round2InvestorCount'],internData['round3InvestorCount']))]
     internData['roundLeadInvestorType'] = [list(val) for val in(zip(internData['round1LeadInvestorType'],internData['round2LeadInvestorType'],internData['round3LeadInvestorType']))]
-    internData['roundInvestmentAmount'] = [list(val) for val in(zip(internData['round1InvestmentAmount'],internData['round2InvestmentAmount'],internData['round2InvestmentAmount']))]
+    internData['roundInvestmentAmount'] = [list(val) for val in(zip(internData['round1InvestmentAmount'],internData['round2InvestmentAmount'],internData['round3InvestmentAmount']))]
     internData['roundValuation'] = [list(val) for val in(zip(internData['round1Valuation'],internData['round2Valuation'],internData['round3Valuation']))]
 
 
@@ -215,6 +214,18 @@ def treatInternData(inpColumn,path):
                     'round3InvestmentAmount',
                     'round3Valuation']
     internData.drop( dropColumns,axis=1,inplace=True)
+
+    # for columns in internData
+    # add temprary names to the data not having a name
+    # index=0
+    # internData.loc[internData['startupName'].isnull(), 'startupname'] = 'tempName_'+str(index+1)
+    for index,row in internData.iterrows():
+        if(internData.iloc[index]['startupName']=='NAN'):
+
+            internData.iloc[index]['startupName']= 'tempname_'+str(index)
+                # print internData.iloc[index]['startupName']
+    #
+
     # internDataNonFunded.drop(dropColumns,axis=1,inplace=True)
     #
     # # internDataNonFunded = internData.loc[:,"roundDate"][0]
@@ -299,6 +310,8 @@ def treatPersonData(inpColumn,path):
     # personData[['name']+['F_or_I']+['file_id']].to_csv(path+'/metaOutput/personData.csv', index=False, encoding='utf-8')
     # expData.to_csv(path+'/metaOutput/expData.csv', index=False, encoding='utf-8')
     # educationData.to_csv(path+'/metaOutput/educationData.csv', index=False, encoding='UTF8')
+
+    # Write to File
     f = open(path+'/metaOutput/personData.json', "w")
     for index,row in personData.iterrows():
         row.to_json(f)
@@ -326,8 +339,8 @@ def treatCrunchbaseData(inpColumn,path):
     crunchbaseData.startupName = crunchbaseData.startupName.astype(str).apply(lambda x: x.upper())
     crunchbaseData.city = crunchbaseData.city.str.split(',').tolist()
     crunchbaseData.city = crunchbaseData.city.apply(lambda x: x[0])
-    crunchbaseData.startupName = crunchbaseData.startupName.str.replace('PVT', '').replace('LTD.', '').replace(
-        'PRIVATE', '').replace('LIMITED', '')
+    crunchbaseData.startupName = crunchbaseData.startupName.str.replace('PVT', '').str.replace('LTD.', '').str.replace(
+        'PRIVATE', '').str.replace('LIMITED', '')
     crunchbaseData.startupName = crunchbaseData.startupName.str.strip()
     crunchbaseData = crunchbaseData.drop_duplicates(['startupName']).reset_index(drop=True)
     crunchbaseData = crunchbaseData[crunchbaseData['founderName'] != '[]'].reset_index(drop=True)
