@@ -1,14 +1,13 @@
 import pandas as pd
-
 from inspect import getsourcefile
 import codecs #to handle errors while loading file.
-import numpy as np
 import os
-import json
+
+
 def treatment():
 
-    path =  os.path.dirname(os.path.abspath(getsourcefile(lambda:0))) # .replace("\\","/")
-    # path = path.replace("\\","/")
+    path =  os.path.dirname(os.path.abspath(getsourcefile(lambda:0)))
+
     # Assign the columns to pick from each of the data sources
     inpColumn = pd.read_csv(path +'/data/dataFromEachSource.csv')
     keyurdata=0.0
@@ -17,12 +16,12 @@ def treatment():
     personData=0.0
     crunchbaseData=0.0
 
-    # keyurdata = treatKeyurData(inpColumn,path)
+    keyurdata = treatKeyurData(inpColumn,path)
     internData= treatInternData(inpColumn,path)
     # internDataFunded,internDataNonFunded = treatInternData(inpColumn,path)
-    # viData = treatVIData(inpColumn,path)
-    # personData = treatPersonData(inpColumn,path)
-    # crunchbaseData = treatCrunchbaseData(inpColumn,path)
+    viData = treatVIData(inpColumn,path)
+    personData = treatPersonData(inpColumn,path)
+    crunchbaseData = treatCrunchbaseData(inpColumn,path)
 
 
 
@@ -31,9 +30,9 @@ def treatment():
 
 def treatKeyurData(inpColumn,path):
 
-    keyurColumns = inpColumn['keyurColumns'].dropna().tolist()
+    keyurColumns = inpColumn['keyurColumns'].dropna().tolist()  # Since other columns have more elements, we need to drop the Not a number elements
     # loading file using codecs to handle errors
-    with codecs.open(path + '/data/keyur.csv', "r", encoding='utf-8',errors='ignore') as keyur_temp:
+    with codecs.open(path + '/data/keyur.csv', "r", encoding='utf-8',errors='ignore') as keyur_temp:   # ignore encoding
         keyurData = pd.read_csv(keyur_temp)
 
 
@@ -60,6 +59,12 @@ def treatKeyurData(inpColumn,path):
                               }, inplace=True)
 
     keyurData = keyurData[keyurColumns]
+
+    keyurData.startupName = keyurData.startupName.str.strip()
+    keyurData.startupName = keyurData.startupName.astype(str).apply(lambda x: x.upper())
+    keyurData.startupName = keyurData.startupName.str.replace('PVT.', '').str.replace('LTD.', '').str.replace('PRIVATE','').str.replace('LIMITED', '').str.strip()
+    keyurData.investorName = keyurData.investorName.astype(str).apply(lambda x: x.upper())
+
 
     keyurData['roundDate'] = pd.to_datetime(keyurData['roundDate'], format="%m/%d/%Y")
 
@@ -89,7 +94,6 @@ def treatKeyurData(inpColumn,path):
 
          }).reset_index()
 
-    keyurData.startupName = keyurData.startupName.str.strip()
 
 
     for index, row in keyurData.iterrows():
@@ -113,9 +117,7 @@ def treatKeyurData(inpColumn,path):
 
         keyurData.iloc[index] = row
     # Get the investor name as a list of lists
-    keyurData.startupName = keyurData.startupName.astype(str).apply(lambda x: x.upper())
-    keyurData.startupName = keyurData.startupName.str.replace('PVT.', '').str.replace('LTD.', '').str.replace('PRIVATE','').str.replace('LIMITED', '').str.strip()
-    keyurData.investorName = keyurData.investorName.astype(str).apply(lambda x: x.upper())
+
     keyurData.to_csv(path+'/metaOutput/keyurData.csv', index=False)
     return keyurData
 
@@ -174,6 +176,10 @@ def treatInternData(inpColumn,path):
 
     internData.startupName = internData.startupName.str.replace('PVT', '').str.replace('LTD.', '').str.replace('PRIVATE','').str.replace('LIMITED', '')
 
+    for index,row in internData.iterrows():
+        if(internData.iloc[index]['startupName']=='NAN'):
+
+            internData.iloc[index]['startupName']= 'tempname_'+str(index)
     # Do all the merging of the columns. Convert into array whereever possible
     internData['round1Date'] = pd.to_datetime(internData['round1Date'], format="%m/%y")
     internData['round2Date'] = pd.to_datetime(internData['round2Date'], format="%m/%y")
@@ -219,10 +225,7 @@ def treatInternData(inpColumn,path):
     # add temprary names to the data not having a name
     # index=0
     # internData.loc[internData['startupName'].isnull(), 'startupname'] = 'tempName_'+str(index+1)
-    for index,row in internData.iterrows():
-        if(internData.iloc[index]['startupName']=='NAN'):
 
-            internData.iloc[index]['startupName']= 'tempname_'+str(index)
                 # print internData.iloc[index]['startupName']
     #
 

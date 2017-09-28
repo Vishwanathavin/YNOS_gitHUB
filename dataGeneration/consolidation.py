@@ -5,7 +5,7 @@ import json
 import ast
 
 from mergingRoutines import internVIMerge, internKeyurMerge, startupCrunchbaseMerge, \
-    getFounderNames, getInvestorNames
+    getCityCoordinates
 from treatment import treatment
 
 
@@ -23,6 +23,8 @@ def getStartupData(crunchbaseData, internData, keyurData,viData):
     # Common Companies between Keyur-Intern
 
     startupData = startupCrunchbaseMerge(startupData, crunchbaseData)
+
+    startupData = getCityCoordinates(startupData)
 
     return startupData
 
@@ -131,6 +133,16 @@ def dataConsolidate():
     personData = getPersonData(startupData[['investorName']+['founderName']],personData)
 
     personData.to_csv(path+'/output/personData.csv', index=False)
+
+    startupData.fillna('',inplace=True)
+    # matrixlist = []
+    # for index,row in startupData.iterrows():
+    #     rowlist = []
+    #     for columns in startupData:
+    #         rowlist.append(type(startupData.iloc[index][columns]))
+    #     matrixlist.append(rowlist)
+    # pd.DataFrame(matrixlist).to_csv('./typeComparison.csv')
+
 
     return startupData
 

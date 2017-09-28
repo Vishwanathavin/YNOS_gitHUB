@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 import ast
+import os
+from inspect import getsourcefile
+import codecs
 def internVIMerge(internData, viData):
 
 
@@ -117,3 +120,22 @@ def getInvestorNames(startupData,personData):
                 invIDList.append(ID[0])
         startupData['InvestorID'].iloc[index]=invIDList
     return(pd.DataFrame(invList,columns=['name']),startupData)
+
+def getCityCoordinates(startupData):
+    path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))
+    with codecs.open(path + '/data/citi_co-ordinates.csv', "r", encoding='utf-8', errors='ignore') as coord_data_temp:
+        coordData = pd.read_csv(coord_data_temp)
+    # coordData = pd.read_csv(path+'/data/citi_co-ordinates.csv')
+    coordData["City"] = coordData["City"].str.strip()
+    coordData.drop_duplicates("City", inplace=True)
+
+    for index, row in startupData.iterrows():
+        lat = coordData[row['city'] == coordData['City']]['Lat'].astype(float).values
+        lon = coordData[row['city'] == coordData['City']]['Lon'].astype(float).values
+        if (lat.size & lon.size):
+            startupData.loc[index, "Lat"] = lat
+            startupData.loc[index, "Lon"] = lon
+        else:
+            startupData.loc[index, "Lat"] = np.nan
+            startupData.loc[index, "Lon"] = np.nan
+    return startupData
