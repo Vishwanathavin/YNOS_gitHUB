@@ -1,6 +1,8 @@
 import os
 from inspect import getsourcefile
 import pandas as pd
+import json
+import ast
 
 from mergingRoutines import internVIMerge, internKeyurMerge, startupCrunchbaseMerge, \
     getFounderNames, getInvestorNames
@@ -14,30 +16,42 @@ def getStartupData(crunchbaseData, internData, keyurData,viData):
     # # Assign the columns to pick from each of the data sources
     # inpColumn = pd.read_csv(path + '/data/dataFromEachSource.csv')
 
-    internData = internVIMerge(internData, viData)
+    startupData = internVIMerge(internData, viData)
 
-    startupData = internKeyurMerge(internData, keyurData)
+    startupData = internKeyurMerge(startupData, keyurData)
 
     # Common Companies between Keyur-Intern
 
     startupData = startupCrunchbaseMerge(startupData, crunchbaseData)
 
-    # Analysis part - new file - analysis report
-    # assert isinstance(startupData, object)
-
-    #
     return startupData
 
 def getPersonData(startupData,personData):
 
-    founderNamesInDataset = getFounderNames(startupData,personData)
-    investorNamesInDataset,startupData = getInvestorNames(startupData,personData)
+    for index,row in startupData.iterrows():
 
-    #Purge person Data to the ones that matter
-    personData=personData[personData.name.isin(founderNamesInDataset.name) | personData.name.isin(investorNamesInDataset.name) ].reset_index(drop=True)
+        if (startupData.iloc[index]['founderName']!=[]):
+            startupData.iloc[index]['founderName'] = ast.literal_eval(startupData.iloc[index]['founderName'])
+
+        # if (startupData.iloc[index]['investorName']!=['']):
+        #     startupData.iloc[index]['investorName'] = ast.literal_eval(startupData.iloc[index]['investorName'])
+
+    personList=[]
+    [personList.append(x) for names in startupData["founderName"] for x in names   ]
+    [personList.append(x) for names in startupData["investorName"] for x in names   ]
 
 
-    return personData,startupData
+    personData = personData[personData["name"].isin(personList)]
+
+    # print [x.isin(personData["name"]) for names in startupData["founderName"] for x in names  ]
+    # founderNamesInDataset = getFounderNames(startupData)
+    # investorNamesInDataset,startupData = getInvestorNames(startupData)
+    #
+    # #Purge person Data to the ones that matter
+    # personData=personData[personData.name.isin(founderNamesInDataset.name) | personData.name.isin(investorNamesInDataset.name) ].reset_index(drop=True)
+
+
+    return personData
 
     # for index,rows in eduData.iterrows():
     #     # line = lines.split(',')
@@ -107,14 +121,16 @@ def dataConsolidate():
         # internDataNonFunded = pd.read_csv('./metaOutput/internDataNonFunded.csv')
         keyurData = pd.read_csv(path+'/metaOutput/keyurData.csv')
 
+        personData = pd.read_json(open(path + '/metaOutput/personData.json').read().replace('\n', '').replace('\r', '').replace('}{', '},{'), lines=True)
+
     else:
-        keyurData,internData, viData,crunchbaseData  = treatment()
+        keyurData,internData, viData,crunchbaseData,personData  = treatment()
 
     startupData = getStartupData(crunchbaseData, internData, keyurData,viData)
+    startupData.to_csv(path + '/output/startupData.csv', index=False)
+    personData = getPersonData(startupData[['investorName']+['founderName']],personData)
 
-    # personData,startupData = getPersonData(startupData,personData)
-    startupData.to_csv(path+'/output/startupData.csv', index=False)
-    # personData.to_csv(path.replace("\\","/")+'/output/personData.csv', index=False)
+    personData.to_csv(path+'/output/personData.csv', index=False)
 
     return startupData
 

@@ -1,5 +1,6 @@
 import pandas as pd
-
+import numpy as np
+import ast
 def internVIMerge(internData, viData):
 
 
@@ -18,7 +19,9 @@ def internVIMerge(internData, viData):
     #     print column,type(internDataFunded.iloc[0][column])
 
     # Merge the round and other information
-
+    internData['investorName'].replace(np.nan,'',inplace=True)
+    # for row in internData.loc[internData.investorName.isnull(), 'investorName'].index:
+    #     internData.at[row, 'investorName'] = []
     # Commenting the earlier instance of grouping since it is not longer happening
     internData = internData.groupby(["startupName"]).agg(
         {'investorName': lambda x: list(x),
@@ -41,6 +44,8 @@ def internVIMerge(internData, viData):
          'roundValuation': 'first'
          }).reset_index()
 
+
+
     # for index, row in internDataFunded.iterrows():
     #     row['InvestorName'] = [x for y, x in sorted(zip(row['dealDate'], row['InvestorName']))]
     #     row['Round_Investment_Amount_INR'] = [x for y, x in sorted(
@@ -53,6 +58,7 @@ def internVIMerge(internData, viData):
 def internKeyurMerge(internDataFunded,keyurData):
 
     # Dom a merge instead of Isin
+    keyurData['investorName'] = keyurData['investorName'].apply(ast.literal_eval)
     commonData1 = internDataFunded[~internDataFunded.startupName.isin(keyurData.startupName)]
     commonData2 = keyurData[~keyurData.startupName.isin(internDataFunded.startupName)]
     commonData3 = keyurData[keyurData.startupName.isin(internDataFunded.startupName)]
@@ -64,10 +70,12 @@ def startupCrunchbaseMerge(startupData,crunchbaseData):
     # Do a merge instead of isin
     commonData1 = crunchbaseData[crunchbaseData.startupName.isin(startupData.startupName)]
     startupData = startupData.merge(
-    commonData1[['startupName'] + ['founderName']],
+    commonData1[['startupName'] + ['founderName']+ ['website']],
     on='startupName',
     how='outer')
-    # startupData.founders = startupData.founders.astype(str)
+
+    for row in startupData.loc[startupData.founderName.isnull(), 'founderName'].index:
+        startupData.at[row, 'founderName'] = []
     return  startupData
 
 def getFounderNames(startupData,personData):
