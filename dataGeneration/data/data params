@@ -33,34 +33,33 @@ Intern Data:
     'Round3 Lead Investor type':
     'Round3 Investment amount (Rupees, Crores)':
     'Round3 Valuation (Rupees Crores)':
-
-    Omitted:
-
-        Incubator, Incubator date, Result, ( Not available)
-
-        Accelerator, Acclerator date, Result of accelaratot, ( Not available)
-
+    'incubator',
+    'incubatorDate',
+    'incubatorResult',
+    'accelerator',
+    'accleratorDate',
+    'accelaratorResult',
 
 Keyur: 
 
     'source'
-'startupName'
-'ICB_industry'
-'ICB_sector'
-'startupClassification'
-'foundedDate'
-'investorName'
-'linkedinURL'
-'investorType'
-'dealInvestmentAmount'
-'roundInvestmentAmount'
-'investmentStage'
-'stageClassification'
-'roundDate'
-'equityValuation'
-'city'
-'state'
-'companyWebsite'
+    'startupName'
+    'ICB_industry'
+    'ICB_sector'
+    'startupClassification'
+    'foundedDate'
+    'investorName'
+    'linkedinURL'
+    'investorType'
+    'dealInvestmentAmount'
+    'roundInvestmentAmount'
+    'investmentStage'
+    'stageClassification'
+    'roundDate'
+    'equityValuation'
+    'city'
+    'state'
+    'companyWebsite'
 
 
 vi data:

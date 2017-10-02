@@ -14,7 +14,12 @@ def internVIMerge(internData, viData):
                      'ICB_sector' ,'startupClassification', 'businessModel', 'city', 'state',
                      'startupStatus' ,'keyword' ,'groupClassification', 'roundDate',
                      'roundInvestorCount' ,'roundLeadInvestorType', 'roundInvestmentAmount',
-                     'roundValuation']
+                     'roundValuation', 'incubator',
+                        'incubatorDate',
+                        'incubatorResult',
+                        'accelerator',
+                        'accleratorDate',
+                        'accelaratorResult',]
     # # Get the union of the data between the commond data and intern funded. This way we get to add teh investor name column to the list of the intern data
     internData = pd.merge(internData,commonData,how='outer',on=internColumns)
 
@@ -44,7 +49,13 @@ def internVIMerge(internData, viData):
          'roundInvestorCount': 'first',
          'roundLeadInvestorType': 'first',
          'roundInvestmentAmount': 'first',
-         'roundValuation': 'first'
+         'roundValuation': 'first',
+         'incubator':'first',
+         'incubatorDate':'first',
+         'incubatorResult':'first',
+         'accelerator':'first',
+         'accleratorDate':'first',
+         'accelaratorResult':'first'
          }).reset_index()
 
 
