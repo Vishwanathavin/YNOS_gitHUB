@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from inspect import getsourcefile
 import codecs #to handle errors while loading file.
 import os
@@ -20,8 +21,8 @@ def treatment():
     internData= treatInternData(inpColumn,path)
     # internDataFunded,internDataNonFunded = treatInternData(inpColumn,path)
     viData = treatVIData(inpColumn,path)
-    personData = treatPersonData(inpColumn,path)
-    crunchbaseData = treatCrunchbaseData(inpColumn,path)
+    # personData = treatPersonData(inpColumn,path)
+    # crunchbaseData = treatCrunchbaseData(inpColumn,path)
 
 
 
@@ -176,23 +177,24 @@ def treatInternData(inpColumn,path):
         'Round3 Valuation (Rupees Crores)':	'round3Valuation'
                                }, inplace=True)
     internData = internData[internColumns]
+    # internData.fillna('',inplace=True)
+    # assign temp names for nan string
+    val = (internData.index[internData['startupName'].isnull()])
+    for index in val:
+        internData.loc[index, 'startupName'] = 'tempName_' + str(index)
 
     internData.startupName = internData.startupName.astype(str).apply(lambda x: x.upper())
     internData.startupName = internData.startupName.str.strip()
 
     internData.startupName = internData.startupName.str.replace('PVT', '').str.replace('LTD.', '').str.replace('PRIVATE','').str.replace('LIMITED', '')
 
-    for index,row in internData.iterrows():
-        if(internData.iloc[index]['startupName']=='NAN'):
-
-            internData.iloc[index]['startupName']= 'tempname_'+str(index)
     # Do all the merging of the columns. Convert into array whereever possible
     internData['round1Date'] = pd.to_datetime(internData['round1Date'], format="%m/%y")
     internData['round2Date'] = pd.to_datetime(internData['round2Date'], format="%m/%y")
     internData['round3Date'] = pd.to_datetime(internData['round3Date'], format="%m/%y")
     internData['foundedDate'] = pd.to_datetime(internData['foundedDate'], format='%Y.0')
 
-    internData.fillna('',inplace=True)
+    # internData.fillna('',inplace=True)
     internData['startupClassification'] = [list(val) for val in(zip(internData['startupClassification'],internData['startupClassification2']))]
     internData['keyword'] = [list(val) for val in(zip(internData['keyword1'],internData['keyword2'],internData['keyword3']))]
     internData['groupClassification'] = [list(val) for val in (zip(internData['groupClassification1'],internData['groupClassification2'],internData['groupClassification3']))]
@@ -242,7 +244,6 @@ def treatInternData(inpColumn,path):
     # internDataFunded.to_csv(path+'/metaOutput/internDataFunded.csv', index=False)
     # internDataNonFunded.to_csv(path+'/metaOutput/internDataNonFunded.csv', index=False)
     internData.to_csv(path+'/metaOutput/internData.csv', index=False)
-    return internData
 
 def treatVIData(inpColumn,path):
     VIColumns = inpColumn['VIColumns'].dropna().tolist()
