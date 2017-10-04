@@ -49,6 +49,8 @@ def main():
     startupData = pd.read_csv('../dataGeneration/output/startupData.csv')
     personData = pd.read_csv('../dataGeneration/output/personData.csv')
 
+
+    # get the startup related details
     col = ['description',
 	'ICB_industry',
 	'ICB_sector',
@@ -76,14 +78,28 @@ def main():
 	'Lat',
 	'Lon',
 	'validated : True or False ']
+
     startupInfo = startupData.ix[:,col]
-    # startupInfo['investmentDetails'] = startupData['roundDate'].isnull()
-    print startupData['roundDate']
-    print startupInfo['investmentDetails']
+
+    # get the investment related details
+
+
+    # get the person detail
+
+    # get the academic details
+
+    # get the experience detail
+
+
+
+
+
+
+
     # print personData.shape
 
 
-    # split into the three collections
+    # split into the 5 collections
 
     # Validate
 

@@ -27,7 +27,7 @@ def internVIMerge(internData, viData):
     #     print column,type(internDataFunded.iloc[0][column])
 
     # Merge the round and other information
-    internData['investorName'].replace(np.nan,'',inplace=True)
+    # internData['investorName'].replace(np.nan,'',inplace=True)
     # for row in internData.loc[internData.investorName.isnull(), 'investorName'].index:
     #     internData.at[row, 'investorName'] = []
     # Commenting the earlier instance of grouping since it is not longer happening
@@ -57,8 +57,6 @@ def internVIMerge(internData, viData):
          'accleratorDate':'first',
          'accelaratorResult':'first'
          }).reset_index()
-
-
 
     # for index, row in internDataFunded.iterrows():
     #     row['InvestorName'] = [x for y, x in sorted(zip(row['dealDate'], row['InvestorName']))]

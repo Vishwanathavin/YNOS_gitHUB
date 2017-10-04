@@ -4,25 +4,20 @@ from inspect import getsourcefile
 import codecs #to handle errors while loading file.
 import os
 
-
 def treatment():
 
     path =  os.path.dirname(os.path.abspath(getsourcefile(lambda:0)))
 
     # Assign the columns to pick from each of the data sources
     inpColumn = pd.read_csv(path +'/data/dataFromEachSource.csv')
-    keyurdata=0.0
-    internData=0.0
-    viData=0.0
-    personData=0.0
-    crunchbaseData=0.0
+
 
     keyurdata = treatKeyurData(inpColumn,path)
     internData= treatInternData(inpColumn,path)
     # internDataFunded,internDataNonFunded = treatInternData(inpColumn,path)
     viData = treatVIData(inpColumn,path)
-    # personData = treatPersonData(inpColumn,path)
-    # crunchbaseData = treatCrunchbaseData(inpColumn,path)
+    personData = treatPersonData(inpColumn,path)
+    crunchbaseData = treatCrunchbaseData(inpColumn,path)
 
 
 
@@ -39,25 +34,25 @@ def treatKeyurData(inpColumn,path):
 
 
 
-    keyurData.rename(columns={'Source' 	:	'source',
-            'Company Name' 	:	'startupName',
-            'ICB Industry' 	:	'ICB_industry',
-            'ICB Sector' 	:	'ICB_sector',
-            'Start up Classification' 	:	'startupClassification',
-            'DOI' 	:	'foundedDate',
-            'Investor Name' 	:	'investorName',
-            'links' 	:	'linkedinURL',
-            'Investor Type 1 (Angel / Institutional Investor/ Boutique / Corporate / Network)' 	:	'investorType',
-            'Deal Investment Amount ( INR M)' 	:	'dealInvestmentAmount',
-            'Round Investment Amount (INR M)' 	:	'roundInvestmentAmount',
-            'Stage of Investment ( Seed / Early)' 	:	'investmentStage',
-            'New Stage Classification' 	:	'stageClassification',
-            'Announcement Date' 	:	'roundDate',
-            'Equity Valuation (INR M)' 	:	'equityValuation',
-            'City' 	:	'city',
-            'State' 	:	'state',
-            'Website' 	:	'companyWebsite'
-                              }, inplace=True)
+    # keyurData.rename(columns={'Source' 	:	'source',
+    #         'Company Name' 	:	'startupName',
+    #         'ICB Industry' 	:	'ICB_industry',
+    #         'ICB Sector' 	:	'ICB_sector',
+    #         'Start up Classification' 	:	'startupClassification',
+    #         'DOI' 	:	'foundedDate',
+    #         'Investor Name' 	:	'investorName',
+    #         'links' 	:	'linkedinURL',
+    #         'Investor Type 1 (Angel / Institutional Investor/ Boutique / Corporate / Network)' 	:	'investorType',
+    #         'Deal Investment Amount ( INR M)' 	:	'dealInvestmentAmount',
+    #         'Round Investment Amount (INR M)' 	:	'roundInvestmentAmount',
+    #         'Stage of Investment ( Seed / Early)' 	:	'investmentStage',
+    #         'New Stage Classification' 	:	'stageClassification',
+    #         'Announcement Date' 	:	'roundDate',
+    #         'Equity Valuation (INR M)' 	:	'equityValuation',
+    #         'City' 	:	'city',
+    #         'State' 	:	'state',
+    #         'Website' 	:	'companyWebsite'
+    #                           }, inplace=True)
 
     keyurData = keyurData[keyurColumns]
 
@@ -136,46 +131,46 @@ def treatInternData(inpColumn,path):
     # internData = pd.read_csv(path + '/data/interns.csv')
     # ---------------------------------------------------------------------
 
-    internData.rename(columns={'Source': 	'source',
-        'Start-up Name': 	'startupName',
-        'Date of Inc': 	'foundedDate',
-        '140 character description': 	'description',
-        'Industry': 	'ICB_industry',
-        'Sector': 	'ICB_sector',
-        'Start up clissification': 	'startupClassification',
-        'Start up clissification 2': 	'startupClassification2',
-        'Business model Classification': 	'businessModel',
-        'Keyword1': 	'keyword1',
-        'Keyword2': 	'keyword2',
-        'Keyword3': 	'keyword3',
-        'City': 	'city',
-        'State': 	'state',
-        'Status': 	'startupStatus',
-        'Gorup Classification 1': 	'groupClassification1',
-        'Gorup Classification 2': 	'groupClassification2',
-        'Gorup Classification 3': 	'groupClassification3',
-        'Incubator': 	'incubator',
-        'Incubator date': 	'incubatorDate',
-        'Incubator Result': 	'incubatorResult',
-        'Accelerator': 	'accelerator',
-        'Acclerator date': 	'accleratorDate',
-        'Accelarator Result': 	'accelaratorResult',
-        'Round1 date': 	'round1Date',
-        'Round1 Total investors': 	'round1InvestorCount',
-        'Round1 Lead Investor type': 	'round1LeadInvestorType',
-        'Round1 Investment amount (Rupees Crores)': 	'round1InvestmentAmount',
-        'Round1 Valuation (Rupees, Crores)': 	'round1Valuation',
-        'Round2 date': 	'round2Date',
-        'Round2 Total investors': 	'round2InvestorCount',
-        'Round2 Lead Investor type': 	'round2LeadInvestorType',
-        'Round2 Investment amount (Rupees Crores)': 	'round2InvestmentAmount',
-        'Round2 Valuation (Rupees Crores)': 	'round2Valuation',
-        'Round3 date': 	'round3Date',
-        'Round3 Total investors': 	'round3InvestorCount',
-        'Round3 Lead Investor type': 	'round3LeadInvestorType',
-        'Round3 Investment amount (Rupees, Crores)': 	'round3InvestmentAmount',
-        'Round3 Valuation (Rupees Crores)':	'round3Valuation'
-                               }, inplace=True)
+    # internData.rename(columns={'Source': 	'source',
+    #     'Start-up Name': 	'startupName',
+    #     'Date of Inc': 	'foundedDate',
+    #     '140 character description': 	'description',
+    #     'Industry': 	'ICB_industry',
+    #     'Sector': 	'ICB_sector',
+    #     'Start up clissification': 	'startupClassification',
+    #     'Start up clissification 2': 	'startupClassification2',
+    #     'Business model Classification': 	'businessModel',
+    #     'Keyword1': 	'keyword1',
+    #     'Keyword2': 	'keyword2',
+    #     'Keyword3': 	'keyword3',
+    #     'City': 	'city',
+    #     'State': 	'state',
+    #     'Status': 	'startupStatus',
+    #     'Gorup Classification 1': 	'groupClassification1',
+    #     'Gorup Classification 2': 	'groupClassification2',
+    #     'Gorup Classification 3': 	'groupClassification3',
+    #     'Incubator': 	'incubator',
+    #     'Incubator date': 	'incubatorDate',
+    #     'Incubator Result': 	'incubatorResult',
+    #     'Accelerator': 	'accelerator',
+    #     'Acclerator date': 	'accleratorDate',
+    #     'Accelarator Result': 	'accelaratorResult',
+    #     'Round1 date': 	'round1Date',
+    #     'Round1 Total investors': 	'round1InvestorCount',
+    #     'Round1 Lead Investor type': 	'round1LeadInvestorType',
+    #     'Round1 Investment amount (Rupees Crores)': 	'round1InvestmentAmount',
+    #     'Round1 Valuation (Rupees, Crores)': 	'round1Valuation',
+    #     'Round2 date': 	'round2Date',
+    #     'Round2 Total investors': 	'round2InvestorCount',
+    #     'Round2 Lead Investor type': 	'round2LeadInvestorType',
+    #     'Round2 Investment amount (Rupees Crores)': 	'round2InvestmentAmount',
+    #     'Round2 Valuation (Rupees Crores)': 	'round2Valuation',
+    #     'Round3 date': 	'round3Date',
+    #     'Round3 Total investors': 	'round3InvestorCount',
+    #     'Round3 Lead Investor type': 	'round3LeadInvestorType',
+    #     'Round3 Investment amount (Rupees, Crores)': 	'round3InvestmentAmount',
+    #     'Round3 Valuation (Rupees Crores)':	'round3Valuation'
+    #                            }, inplace=True)
     internData = internData[internColumns]
     # internData.fillna('',inplace=True)
     # assign temp names for nan string
@@ -257,7 +252,7 @@ def treatVIData(inpColumn,path):
     # 2. Convert startup Name to upper case
     # Change column name
 
-    viData.rename(columns={'Company': 'startupName', 'Investors': 'investorName'}, inplace=True)
+    # viData.rename(columns={'Company': 'startupName', 'Investors': 'investorName'}, inplace=True)
     viData = viData[VIColumns]
     # viData = viData.drop_duplicates('startupName')
     viData.startupName = viData.startupName.astype(str).apply(lambda x: x.upper())

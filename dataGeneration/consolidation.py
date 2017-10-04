@@ -1,12 +1,12 @@
+import ast
 import os
 from inspect import getsourcefile
-import pandas as pd
-import json
-import ast
 
+import pandas as pd
+
+from dataGeneration.treatment.treatment import treatment
 from mergingRoutines import internVIMerge, internKeyurMerge, startupCrunchbaseMerge, \
     getCityCoordinates
-from treatment import treatment
 
 
 def getStartupData(crunchbaseData, internData, keyurData,viData):
