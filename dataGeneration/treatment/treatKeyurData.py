@@ -73,6 +73,8 @@ def treatKeyurData():
     keyurDataAdditional = pd.read_csv('../data/keyurAdditionalDetailsAddedByInterns.csv')[keyurColumns]
     keyurDataAdditional.startupName = keyurDataAdditional.startupName.str.strip().astype(str).apply(lambda x: x.upper()).str.replace('PVT.','').str.replace('LTD.', '').str.replace('PRIVATE', '').str.replace('LIMITED', '').str.strip()
 
+
+
     keyurDataAdditional['startupClassification'] = [list(val) for val in (
     zip(keyurDataAdditional['startupClassification'], keyurDataAdditional['startupClassification2']))]
     keyurDataAdditional['keyword'] = [list(val) for val in

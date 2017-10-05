@@ -1,9 +1,36 @@
 import pandas as pd
 def treatInternData():
-    inpColumn = pd.read_csv('./data/dataFromEachSource.csv')
+    inpColumn = pd.read_csv('../data/dataFromEachSource.csv')
     internColumns = inpColumn['internColumns'].dropna().tolist()
 
-    internData = pd.read_csv('./data/interns.csv')[internColumns]
+    internData = pd.read_csv('../data/interns.csv')[internColumns]
+    nullstartUP = internData[internData['startupName'].isnull()]
+    for index,rows in nullstartUP.iterrows():
+        internData.loc[index, 'startupName'] = 'tempName_' + str(index)
+
+    internData.startupName = internData.startupName.astype(str).apply(lambda x: x.upper()).str.strip().str.replace('LTD.', '').str.replace('PVT', '').str.replace('LTD', '').str.replace('PRIVATE', '').str.replace('LIMITED', '')
+
+    # merge intern old and intern New
+    internnew = pd.read_csv('../data/internNew.csv')[internColumns+['website']]
+    internnew.startupName = internnew.startupName.astype(str).apply(lambda x: x.upper()).str.strip().str.replace('LTD.', '').str.replace('PVT', '').str.replace('LTD', '').str.replace('PRIVATE', '').str.replace('LIMITED', '')
+
+    commondata1 = internData[internData.startupName.isin(internnew.startupName)]
+
+    commondata2 = internnew[internnew.startupName.isin(internData.startupName)][['startupName','incubator','incubatorDate','website']]
+
+
+    uncommondata1 = internData[~internData.startupName.isin(internnew.startupName)]
+
+    uncommondata2 = internnew[~internnew.startupName.isin(internData.startupName)]
+
+
+
+    commonData = pd.merge(commondata1.drop(['incubator','incubatorDate'],axis=1),commondata2,how="outer",on='startupName')
+
+    internData = pd.concat([uncommondata1, uncommondata2,commonData], axis=0, ignore_index=True)
+
+
+
 
     dealCurryColumns = ['source',
                         'startupName',
@@ -26,16 +53,11 @@ def treatInternData():
                         'founder2Name',
                         'founder3Name',
 ]
-    dealCurryData = pd.read_csv('./data/temp/keyurAdditionalDetailsAddedByInterns.csv')[dealCurryColumns]
-
-    val = (internData.index[internData['startupName'].isnull()])
-    for index in val:
-        internData.loc[index, 'startupName'] = 'tempName_' + str(index)
-
+    dealCurryData = pd.read_csv('../data/dealCurry.csv')[dealCurryColumns]
+    dealCurryData.startupName = dealCurryData.startupName.astype(str).apply(lambda x: x.upper()).str.strip().str.replace('LTD.', '').str.replace('PVT', '').str.replace('LTD', '').str.replace('PRIVATE', '').str.replace('LIMITED', '')
+    dealCurryData = dealCurryData[~dealCurryData.startupName.isin(internData.startupName)]
+#
     internData = pd.concat([internData, dealCurryData], axis=0, ignore_index=True)
-    internData.startupName = internData.startupName.astype(str).apply(lambda x: x.upper()).str.strip().str.replace('LTD.', '').str.replace('PVT','').str.replace('LTD','').str.replace('PRIVATE','').str.replace('LIMITED', '')
-
-
 
     # Do all the merging of the columns. Convert into array whereever possible
     internData['round1Date'] = pd.to_datetime(internData['round1Date'])
@@ -82,8 +104,8 @@ def treatInternData():
     internData.drop( dropColumns,axis=1,inplace=True)
 
 
-
-
-    internData.to_csv('./metaOutput/internData.csv', index=False)
+#
+#
+    internData.to_csv('../metaOutput/internData.csv', index=False)
 
 treatInternData()

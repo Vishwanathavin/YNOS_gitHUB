@@ -6,6 +6,7 @@ personFile = open('../metaOutput/personData.json').read()
 personFile = personFile.replace('\n', '').replace('\r', '').replace('}{', '},{').replace('file_id', 'personID')
 personData = pd.read_json(personFile, lines=True)
 
+startupData['founderName']= startupData['founderName'].fillna('')
 for index, row in startupData.iterrows():
 
     if (startupData.iloc[index]['founderName'] != []):

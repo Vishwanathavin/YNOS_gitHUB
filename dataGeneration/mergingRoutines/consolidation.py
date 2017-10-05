@@ -5,7 +5,7 @@ from inspect import getsourcefile
 import pandas as pd
 
 from dataGeneration.treatment.treatment import treatment
-from mergingRoutines import internVIMerge, internKeyurMerge, startupCrunchbaseMerge, \
+from dataGeneration.mergingRoutines import internVIMerge, internKeyurMerge, startupCrunchbaseMerge, \
     getCityCoordinates
 
 
