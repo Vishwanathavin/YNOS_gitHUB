@@ -16,9 +16,14 @@ for index,row in nullcolumns.iterrows():
 nullcolumns = commonData[commonData['city_x'].isnull()]
 for index,row in nullcolumns.iterrows():
     commonData.loc[index,'city_x'] = commonData.loc[index,'city_y']
+
+nullcolumns = commonData[commonData['website_x'].isnull()]
+for index,row in nullcolumns.iterrows():
+    commonData.loc[index,'website_x'] = commonData.loc[index,'website_y']
 #
 commonData["founderName"] = commonData["founderName_x"]
 commonData["city"] = commonData["city_x"]
+commonData["website"] = commonData["website_x"]
 # # for index,row in commonData.iterrows():
 # #     print type(row['founderName_x'])
 # #     if (row['founderName_x']!=np.nan):
@@ -32,8 +37,8 @@ commonData["city"] = commonData["city_x"]
 # #         commonData.loc[index,'city'] = row['city_y']
 # #
 #
-commonData.drop(['founderName_x','founderName_y','city_x','city_y'],axis=1,inplace=True)
+commonData.drop(['founderName_x','founderName_y','city_x','city_y','website_x','website_y'],axis=1,inplace=True)
 #
-startupData = pd.merge(startupData.drop(['founderName','city'],axis=1),commonData[['startupName','founderName','website','city']],how='outer',on='startupName')
+startupData = pd.merge(startupData.drop(['founderName','city','website'],axis=1),commonData[['startupName','founderName','website','city']],how='outer',on='startupName')
 # print startupData.columns
 startupData.to_csv('../metaOutput/internCrunchbaseMerge.csv', index=False)
