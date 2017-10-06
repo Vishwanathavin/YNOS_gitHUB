@@ -24,7 +24,7 @@ def treatKeyurData():
             'stageClassification': lambda x: list(x),
             'equityValuation': lambda x: list(x),
             'roundDate': lambda x: list(x),
-            'companyWebsite': 'first',
+            'website': 'first',
             'source': 'first'
          }).reset_index()
 
