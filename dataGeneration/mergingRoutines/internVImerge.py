@@ -6,6 +6,7 @@ viData = pd.read_csv('../metaOutput/viData.csv')
 commonData = pd.merge(internData, viData, how='inner',on='startupName')
 
 internData = pd.merge(internData,commonData[['startupName','investorName']],how='outer',on='startupName')
+
 internData = internData.groupby(["startupName"]).agg(
         {'investorName': lambda x: list(x),
          'source': 'first',
@@ -30,7 +31,8 @@ internData = internData.groupby(["startupName"]).agg(
          'incubatorResult':'first',
          'accelerator':'first',
          'accleratorDate':'first',
-         'accelaratorResult':'first'
+         'accelaratorResult':'first',
+         'founderName': 'first',
+         'website': 'first'
          }).reset_index()
-
 internData.to_csv('../metaOutput/internVImerge.csv',index=False)
