@@ -64,6 +64,7 @@ def treatInternData():
     internData['round2Date'] = pd.to_datetime(internData['round2Date'])
     internData['round3Date'] = pd.to_datetime(internData['round3Date'])
     internData['foundedDate'] = pd.to_datetime(internData['foundedDate'])
+    internData['incubatorDate'] = pd.to_datetime(internData['incubatorDate'])
 
     internData['startupClassification'] = [list(val) for val in(zip(internData['startupClassification'],internData['startupClassification2']))]
     internData['founderName'] = [list(val) for val in(zip(internData['founder1Name'],internData['founder1Name'],internData['founder3Name']))]
