@@ -38,6 +38,7 @@ def treatInternData():
                         'description',
                         'ICB_industry',
                         'ICB_sector',
+                        'businessModel',
                         'startupClassification',
                         'groupClassification1',
                         'groupClassification2',
@@ -94,7 +95,7 @@ def treatInternData():
     internData.fillna('',inplace=True)
 
     internData['startupClassification'] = [list(filter(None, val)) for val in(zip(internData['startupClassification'],internData['startupClassification2']))]
-    internData['founderName'] = [list(filter(None, val)) for val in(zip(internData['founder1Name'],internData['founder1Name'],internData['founder3Name']))]
+    internData['founderName'] = [list(filter(None, val)) for val in(zip(internData['founder1Name'],internData['founder2Name'],internData['founder3Name']))]
     internData['keyword'] = [list(filter(None, val)) for val in(zip(internData['keyword1'],internData['keyword2'],internData['keyword3']))]
     internData['groupClassification'] = [list(filter(None, val)) for val in (zip(internData['groupClassification1'],internData['groupClassification2'],internData['groupClassification3']))]
     internData['roundDate'] = [list( val) for val in(zip(internData['round1Date'],internData['round2Date'],internData['round3Date']))]

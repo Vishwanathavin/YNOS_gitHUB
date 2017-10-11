@@ -5,16 +5,16 @@ def treatKeyurData():
     keyurColumns = inpColumn['keyurColumns'].dropna().tolist()  # Since other columns have more elements, we need to drop the Not a number elements
     keyurData = pd.read_csv('../data/keyur.csv')[keyurColumns]
 
-    keyurData.fillna('',inplace=True)
+
     keyurData.startupName = keyurData.startupName.str.strip().astype(str).apply(lambda x: x.upper()).str.replace('PVT.', '').str.replace('LTD.', '').str.replace('PRIVATE','').str.replace('LIMITED', '').str.strip()
     keyurData.investorName = keyurData.investorName.astype(str).apply(lambda x: x.upper())
 
     # keyurData['roundDate'] = pd.to_datetime(keyurData['roundDate'], format="%m/%d/%Y")
     keyurData['roundDate'] = pd.to_datetime(keyurData['roundDate'])
-    keyurData['foundedDate'] = pd.to_datetime(keyurData['foundedDate'])
+    keyurData['foundedDate'] = pd.to_datetime(keyurData['foundedDate'], format='%Y.0')
 
     keyurData = keyurData[(keyurData['roundDate'] > '2014-01-01')]
-
+    keyurData.fillna('', inplace=True)
     keyurData = keyurData.groupby(["startupName"]).agg(
         {
             'foundedDate': 'first',
@@ -58,6 +58,7 @@ def treatKeyurData():
                     'description',
                     'ICB_industry',
                     'ICB_sector',
+                    'businessModel',
                     'startupClassification',
                     'groupClassification1',
                     'startupClassification2',
