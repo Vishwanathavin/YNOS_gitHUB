@@ -8,11 +8,14 @@ crunchbase = pd.read_csv('../metaOutput/crunchbaseData.csv')
 # startupData['founderName'] = crunchbase[startupData.startupName.isin(crunchbase.startupName)]['founderName']
 
 commonData = pd.merge(startupData, crunchbase, how='inner',on='startupName')
-nullcolumns = commonData[commonData['founderName_x'].isnull()]
+
+nullcolumns = commonData[commonData['founderName_x']=='[]']
 
 for index,row in nullcolumns.iterrows():
     commonData.loc[index,'founderName_x'] = commonData.loc[index,'founderName_y']
-#
+
+
+
 nullcolumns = commonData[commonData['city_x'].isnull()]
 for index,row in nullcolumns.iterrows():
     commonData.loc[index,'city_x'] = commonData.loc[index,'city_y']
@@ -40,5 +43,6 @@ commonData["website"] = commonData["website_x"]
 commonData.drop(['founderName_x','founderName_y','city_x','city_y','website_x','website_y'],axis=1,inplace=True)
 #
 startupData = pd.merge(startupData.drop(['founderName','city','website'],axis=1),commonData[['startupName','founderName','website','city']],how='outer',on='startupName')
+startupData.loc[startupData['founderName'].isnull(),'founderName'] = '[]'
 # print startupData.columns
 startupData.to_csv('../metaOutput/internCrunchbaseMerge.csv', index=False)

@@ -1,19 +1,13 @@
 import pandas as pd
-class classStartupInfo:
 
-    def __init__(self, my_dataframe):
-        self.name = my_dataframe.name
-        self.age = my_dataframe.age
+file = pd.DataFrame()
+print "File",file
+data = pd.Series({"index": 0,"A": 21})
+print "Data",data
+# data2 = pd.Series({index"C":30})
+# data=data.append(data2)
+file=file.append(data)
+data = pd.Series({"index" : 3,"B": 32})
 
-    def printType(self):
-        print type(self.name.iloc[0]),self.name.iloc[0]
-        print type(self.age),self.age
-
-def main():
-    startupData = pd.read_csv('temp.csv')
-
-    startupClass = classStartupInfo(startupData)
-    startupClass.printType()
-
-if __name__=='__main__':
-    main()
+file=file.append(data,ignore_index=True)
+print file.head()

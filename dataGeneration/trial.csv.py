@@ -1,16 +1,46 @@
 import pandas as pd
+import numpy as np
 
-internold = pd.read_csv('./temp/interns.csv')
+dictionary = {
+            'startupID':'string',
+            'ICB_industry':'string',
+            'ICB_sector':'string',
+            'accelaratorResult':'string',
+            'accelerator':'string',
+            'accleratorDate':'string',
+            'businessModel':'string',
+            'description':'string',
+            'foundedDate':'string',
+            'groupClassification':'string',
+            'incubator':'string',
+            'incubatorDate':'string',
+            'incubatorResult':'string',
+            'keyword':'string',
+            'source':'string',
+            'startupClassification':'string',
+            'startupName':'string',
+            'startupStatus':'string',
+            'state':'string',
+            'founderName':'string',
+            'website':'string',
+            'city':'string',
+            'dataValidation':'string',
+            'investmentStatus':'string'
+}
+
+for key,value in dictionary.iteritems():
+    print key," : ", value
 
 
-internnew = pd.read_csv('./temp/internNew.csv')
+# val1 = internData[internData['startupClassification'].notnull()]['startupClassification']
+# val2 = internData[internData['startupClassification2'].notnull()]['startupClassification2']
+# print val1.index.values
+# print val2.index.values
+# print zip(val1,val2)
 
-commondata = internold[internold.startupName.isin(internnew.startupName)]
-
-uncommondata1 =  internold[~internold.startupName.isin(internnew.startupName)]
-uncommondata2 =  internnew[~internnew.startupName.isin(internold.startupName)]
-print uncommondata1.shape,uncommondata2.shape
-
-internData = pd.concat([uncommondata1, uncommondata2], axis=0, ignore_index=True)
-
-internData.to_csv('./temp/interndata.csv')
+# for val in(zip(internData[internData['startupClassification'].notnull()]['startupClassification'],internData[internData['startupClassification2'].notnull()]['startupClassification2'])):
+#     print val,len(val)
+# internData['startupClassification'] = [list(val) if len(val) > 1 else val for val in(zip(internData[internData['startupClassification'].notnull()]['startupClassification'],internData[internData['startupClassification2'].notnull()]['startupClassification2']))]
+# print internData['startupClassification']
+# for index, rows in internData.iterrows():
+#     print len(internData.loc[index,'startupClassification'])

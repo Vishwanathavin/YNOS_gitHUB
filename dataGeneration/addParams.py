@@ -1,10 +1,13 @@
-import pandas as pd
-import numpy as np
-from datetime import datetime
 import codecs
 import os
+from datetime import datetime
 from inspect import getsourcefile
-from consolidation import dataConsolidate
+
+import numpy as np
+import pandas as pd
+
+from dataGeneration.mergingRoutines.consolidation import dataConsolidate
+
 
 def getTier(personData):
     path = os.path.dirname(os.path.abspath(getsourcefile(lambda: 0)))

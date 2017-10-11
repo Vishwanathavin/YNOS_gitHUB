@@ -1,14 +1,17 @@
 import pandas as pd
+import numpy as np
 def treatKeyurData():
     inpColumn = pd.read_csv('../data/dataFromEachSource.csv')
     keyurColumns = inpColumn['keyurColumns'].dropna().tolist()  # Since other columns have more elements, we need to drop the Not a number elements
     keyurData = pd.read_csv('../data/keyur.csv')[keyurColumns]
 
+    keyurData.fillna('',inplace=True)
     keyurData.startupName = keyurData.startupName.str.strip().astype(str).apply(lambda x: x.upper()).str.replace('PVT.', '').str.replace('LTD.', '').str.replace('PRIVATE','').str.replace('LIMITED', '').str.strip()
     keyurData.investorName = keyurData.investorName.astype(str).apply(lambda x: x.upper())
 
     # keyurData['roundDate'] = pd.to_datetime(keyurData['roundDate'], format="%m/%d/%Y")
     keyurData['roundDate'] = pd.to_datetime(keyurData['roundDate'])
+    keyurData['foundedDate'] = pd.to_datetime(keyurData['foundedDate'])
 
     keyurData = keyurData[(keyurData['roundDate'] > '2014-01-01')]
 
@@ -72,16 +75,14 @@ def treatKeyurData():
     ]
     keyurDataAdditional = pd.read_csv('../data/keyurAdditionalDetailsAddedByInterns.csv')[keyurColumns]
     keyurDataAdditional.startupName = keyurDataAdditional.startupName.str.strip().astype(str).apply(lambda x: x.upper()).str.replace('PVT.','').str.replace('LTD.', '').str.replace('PRIVATE', '').str.replace('LIMITED', '').str.strip()
-
-
-
-    keyurDataAdditional['startupClassification'] = [list(val) for val in (
+    keyurDataAdditional.fillna('', inplace=True)
+    keyurDataAdditional['startupClassification'] = [list(filter(None,val)) for val in (
     zip(keyurDataAdditional['startupClassification'], keyurDataAdditional['startupClassification2']))]
-    keyurDataAdditional['keyword'] = [list(val) for val in
+    keyurDataAdditional['keyword'] = [list(filter(None,val)) for val in
                              (zip(keyurDataAdditional['keyword1'], keyurDataAdditional['keyword2'], keyurDataAdditional['keyword3']))]
-    keyurDataAdditional['groupClassification'] = [list(val) for val in (
+    keyurDataAdditional['groupClassification'] = [list(filter(None,val)) for val in (
     zip(keyurDataAdditional['groupClassification1'], keyurDataAdditional['groupClassification2'], keyurDataAdditional['groupClassification3']))]
-    keyurDataAdditional['founderName'] = [list(val) for val in (
+    keyurDataAdditional['founderName'] = [list(filter(None,val)) for val in (
     zip(keyurDataAdditional['founder1Name'], keyurDataAdditional['founder2Name'], keyurDataAdditional['founder3Name']))]
 
     dropColumns = ['startupClassification2',
@@ -98,6 +99,21 @@ def treatKeyurData():
     keyurDataAdditional.drop(dropColumns, axis=1, inplace=True)
 
     keyurData = pd.merge(keyurData, keyurDataAdditional, how='outer', on='startupName')
+
+    null_rows = keyurData[keyurData['startupClassification'].isnull()]
+    for index,row  in null_rows.iterrows():
+        keyurData.loc[index,'startupClassification'] = '[]'
+
+    null_rows = keyurData[keyurData['groupClassification'].isnull()]
+    for index,row  in null_rows.iterrows():
+        keyurData.loc[index,'groupClassification'] = '[]'
+
+    null_rows = keyurData[keyurData['keyword'].isnull()]
+    for index,row  in null_rows.iterrows():
+        keyurData.loc[index,'keyword'] = '[]'
+    null_rows = keyurData[keyurData['founderName'].isnull()]
+    for index,row  in null_rows.iterrows():
+        keyurData.loc[index,'founderName'] = '[]'
 
     keyurData.to_csv('../metaOutput/keyurData.csv', index=False)
 

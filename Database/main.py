@@ -2,11 +2,61 @@ import pymongo
 import pandas as pd
 import json
 import codecs
+import numpy as np
 import ast
-
 def adjustStartup(db):
-    print 'hi'
-    # sampleData = pd.read_csv(codecs.open('./data/sampleData.csv', "r", encoding='utf-8',errors='ignore'))
+
+    startupData = pd.read_csv('./data/startupData.csv',na_filter=False)
+
+    # Do not convert nan to empty string here
+
+    # for column in startupData:
+    #     print column, startupData.iloc[0][column],type(startupData.iloc[0][column])
+    # use string split option
+
+    # startupData['groupClassification'] = startupData['groupClassification'].str.replace('[',).str.replace(']','')
+    # startupData['groupClassification'] = startupData['groupClassification'].str.split(',')
+    print type(startupData.iloc[0]['groupClassification']),startupData.iloc[0]['groupClassification']
+
+    # print [index for index,row in startupData.iterrows()]
+    # print ([ast.literal_eval(startupData.loc[index,'groupClassification']) for index,row in startupData.iterrows()])
+    # text =  startupData.iloc[0]['groupClassification'].replace('[','').replace(']','')\
+    #     .split(',')
+    # import re
+    # mylist = re.split(',', text )
+    # print mylist
+    # startupData.groupClassification = startupData.groupClassification.map(lambda x: x.replace('[', '').replace(']','').split(','))
+    # print type(startupData.iloc[0]['groupClassification']), startupData.iloc[0]['groupClassification']
+
+    # use ast literal eval to convert string into lists
+    # startupData['groupClassification'] = startupData['groupClassification'].apply(ast.literal_eval)
+    # startupData['startupClassification'] = startupData['startupClassification'].apply(ast.literal_eval)
+    # startupData['keyword'] = startupData['keyword'].apply(ast.literal_eval)
+    # startupData['dealInvestmentAmount'] = startupData['dealInvestmentAmount'].apply(ast.literal_eval)
+    # startupData['roundDate'] = startupData['roundDate'].apply(ast.literal_eval)
+    # startupData['roundInvestmentAmount'] = startupData['roundInvestmentAmount'].apply(ast.literal_eval)
+    # startupData['roundInvestorCount'] = startupData['roundInvestorCount'].apply(ast.literal_eval)
+    # startupData['roundLeadInvestorType'] = startupData['roundLeadInvestorType'].apply(ast.literal_eval)
+    # startupData['roundValuation'] = startupData['roundValuation'].apply(ast.literal_eval)
+    # startupData['equityValuation			'] = startupData['equityValuation			'].apply(ast.literal_eval)
+    # startupData['investorName'] = startupData['investorName'].apply(ast.literal_eval)
+    # startupData['investorType'] = startupData['investorType'].apply(ast.literal_eval)
+    # startupData['investmentStage'] = startupData['investmentStage'].apply(ast.literal_eval)
+    # startupData['founderName'] = startupData['founderName'].apply(ast.literal_eval)
+    # startupData['investorName'] = startupData['investorName'].apply(ast.literal_eval)
+    # startupData['linkedinURL'] = startupData['linkedinURL'].apply(ast.literal_eval)
+
+
+	# Make changes that is definite here. It should pass through this step before it goes to the database
+
+		# Add the new column, whether startupValidated
+
+    # print  all(isinstance(item, np.nan) for item in startupData['roundDate'])
+
+
+
+	# startupData['']
+
     #
     # sampleData['roundInvestmentAmountINR'] =sampleData['roundInvestmentAmountINR'].apply(ast.literal_eval)
     # sampleData['investorID'] =sampleData['investorID'].apply(ast.literal_eval)
@@ -25,11 +75,7 @@ def adjustStartup(db):
     #         else:
     #             print column,': ',(sampleData.iloc[0][column]), type(sampleData.iloc[0][column])
 
-    # get the city in the right format
 
-    # Do the checks for format locally
-    # Push
-    # print "Do nothing"
 def adjustPerson():
     # remove unicodes
     # Validators
@@ -37,6 +83,8 @@ def adjustPerson():
     print "DO nothing"
 
 def main():
+	adjustStartup(db=None)
+
     # try:
     #     conn = pymongo.MongoClient()
     #     print "Connected successfully!!!"
@@ -46,40 +94,13 @@ def main():
     # db = conn.YNOS
 
     # takes input as a startupData and person Data with the investor Founder mapping
-    startupData = pd.read_csv('../dataGeneration/output/startupData.csv')
-    personData = pd.read_csv('../dataGeneration/output/personData.csv')
+    # startupData = pd.read_csv('../dataGeneration/output/startupData.csv')
+    # personData = pd.read_csv('../dataGeneration/output/personData.csv')
 
 
-    # get the startup related details
-    col = ['description',
-	'ICB_industry',
-	'ICB_sector',
-	'accelaratorResult',
-	'accelerator',
-	'accleratorDate',
-	'businessModel',
-	'city',
-	'companyWebsite	',
-	'investmentDetails : True or False',
-	'foundedDate',
-	'groupClassification',
-	'incubatorincubatorDate',
-	'incubatorResult',
-	'keyword',
-	'source',
-	'stageClassification',
-	'startupClassification',
-	'startupName',
-	'startupID',
-	'startupStatus',
-	'state',
-	'founderID ',
-	'website',
-	'Lat',
-	'Lon',
-	'validated : True or False ']
 
-    startupInfo = startupData.ix[:,col]
+
+    # startupInfo = startupData.ix[:,col]
 
     # get the investment related details
 

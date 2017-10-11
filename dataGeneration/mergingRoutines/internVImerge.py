@@ -6,7 +6,7 @@ viData = pd.read_csv('../metaOutput/viData.csv')
 commonData = pd.merge(internData, viData, how='inner',on='startupName')
 
 internData = pd.merge(internData,commonData[['startupName','investorName']],how='outer',on='startupName')
-
+internData.fillna('',inplace=True)
 internData = internData.groupby(["startupName"]).agg(
         {'investorName': lambda x: list(x),
          'source': 'first',

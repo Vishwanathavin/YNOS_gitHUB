@@ -59,18 +59,45 @@ def treatInternData():
 #
     internData = pd.concat([internData, dealCurryData], axis=0, ignore_index=True)
 
-    # Do all the merging of the columns. Convert into array whereever possible
-    internData['round1Date'] = pd.to_datetime(internData['round1Date'])
-    internData['round2Date'] = pd.to_datetime(internData['round2Date'])
-    internData['round3Date'] = pd.to_datetime(internData['round3Date'])
-    internData['foundedDate'] = pd.to_datetime(internData['foundedDate'])
-    internData['incubatorDate'] = pd.to_datetime(internData['incubatorDate'])
+    # # Do all the merging of the columns. Convert into array whereever possible
+    # internData['round1Date'].replace('', np.nan, inplace=True)
+    # internData['round2Date'].replace('', np.nan, inplace=True)
+    # internData['round3Date'].replace('', np.nan, inplace=True)
+    # internData['foundedDate'].replace('', np.nan, inplace=True)
+    # internData['incubatorDate'].replace('', np.nan, inplace=True)
 
-    internData['startupClassification'] = [list(val) for val in(zip(internData['startupClassification'],internData['startupClassification2']))]
-    internData['founderName'] = [list(val) for val in(zip(internData['founder1Name'],internData['founder1Name'],internData['founder3Name']))]
-    internData['keyword'] = [list(val) for val in(zip(internData['keyword1'],internData['keyword2'],internData['keyword3']))]
-    internData['groupClassification'] = [list(val) for val in (zip(internData['groupClassification1'],internData['groupClassification2'],internData['groupClassification3']))]
-    internData['roundDate'] = [list(val) for val in(zip(internData['round1Date'],internData['round2Date'],internData['round3Date']))]
+    # internData[['round1Date','round2Date','round3Date','foundedDate','incubatorDate']]\
+    #     .replace('', np.nan, inplace=True)
+    # print type(internData.iloc[0]['round1Date']), internData.iloc[0]['round1Date']
+    # internData['round1Date'] = pd.to_datetime(internData[internData['round1Date'].notnull()]['round1Date'],
+    #                                           format="%m/%y")
+    internData['round1Date'] = pd.to_datetime(internData['round1Date'],format="%y-%b")
+    internData['round2Date'] = pd.to_datetime(internData['round2Date'],format="%y-%b")
+    internData['round3Date'] = pd.to_datetime(internData['round3Date'],format="%y-%b")
+    internData['foundedDate'] = pd.to_datetime(internData['foundedDate'],format="%Y.0")
+    internData['incubatorDate'] = pd.to_datetime(internData['incubatorDate'],format="%m/%y")
+
+    # internData['round2Date'] = pd.to_datetime(internData[internData['round2Date'].notnull()]['round2Date'],
+    #                                           format="%m/%y")
+    # internData['round3Date'] = pd.to_datetime(internData[internData['round3Date'].notnull()]['round3Date'],
+    #                                           format="%m/%y")
+    # internData['foundedDate'] = pd.to_datetime(internData[internData['foundedDate'].notnull()]['foundedDate'],
+    #                                           format="%Y")
+    # internData['incubatorDate'] = pd.to_datetime(internData[internData['incubatorDate'].notnull()]['incubatorDate'],
+    #                                           format="%m/%y")
+    # internData['round2Date'] = pd.to_datetime(internData['round2Date'])
+    # internData['round3Date'] = pd.to_datetime(internData['round3Date'])
+    # internData['foundedDate'] = pd.to_datetime(internData['foundedDate'])
+    # internData['incubatorDate'] = pd.to_datetime(internData['incubatorDate'])
+
+    # WE need to set the cells to '' because when we concatenate, intern and dealcurry, some of the columns are empty and they feature as nan
+    internData.fillna('',inplace=True)
+
+    internData['startupClassification'] = [list(filter(None, val)) for val in(zip(internData['startupClassification'],internData['startupClassification2']))]
+    internData['founderName'] = [list(filter(None, val)) for val in(zip(internData['founder1Name'],internData['founder1Name'],internData['founder3Name']))]
+    internData['keyword'] = [list(filter(None, val)) for val in(zip(internData['keyword1'],internData['keyword2'],internData['keyword3']))]
+    internData['groupClassification'] = [list(filter(None, val)) for val in (zip(internData['groupClassification1'],internData['groupClassification2'],internData['groupClassification3']))]
+    internData['roundDate'] = [list( val) for val in(zip(internData['round1Date'],internData['round2Date'],internData['round3Date']))]
     internData['roundInvestorCount'] = [list(val) for val in(zip(internData['round1InvestorCount'],internData['round2InvestorCount'],internData['round3InvestorCount']))]
     internData['roundLeadInvestorType'] = [list(val) for val in(zip(internData['round1LeadInvestorType'],internData['round2LeadInvestorType'],internData['round3LeadInvestorType']))]
     internData['roundInvestmentAmount'] = [list(val) for val in(zip(internData['round1InvestmentAmount'],internData['round2InvestmentAmount'],internData['round3InvestmentAmount']))]
