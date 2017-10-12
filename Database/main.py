@@ -1,134 +1,177 @@
-import pymongo
+# Import packages
 import pandas as pd
-import json
-import codecs
-import numpy as np
+from datetime import datetime
+import pymongo
 import ast
-def adjustStartup(db):
+import numpy as np
+# Class
 
-    startupData = pd.read_csv('./data/startupData.csv',na_filter=False)
-
-    # Do not convert nan to empty string here
-
-    # for column in startupData:
-    #     print column, startupData.iloc[0][column],type(startupData.iloc[0][column])
-    # use string split option
-
-    # startupData['groupClassification'] = startupData['groupClassification'].str.replace('[',).str.replace(']','')
-    # startupData['groupClassification'] = startupData['groupClassification'].str.split(',')
-    print type(startupData.iloc[0]['groupClassification']),startupData.iloc[0]['groupClassification']
-
-    # print [index for index,row in startupData.iterrows()]
-    # print ([ast.literal_eval(startupData.loc[index,'groupClassification']) for index,row in startupData.iterrows()])
-    # text =  startupData.iloc[0]['groupClassification'].replace('[','').replace(']','')\
-    #     .split(',')
-    # import re
-    # mylist = re.split(',', text )
-    # print mylist
-    # startupData.groupClassification = startupData.groupClassification.map(lambda x: x.replace('[', '').replace(']','').split(','))
-    # print type(startupData.iloc[0]['groupClassification']), startupData.iloc[0]['groupClassification']
-
-    # use ast literal eval to convert string into lists
-    # startupData['groupClassification'] = startupData['groupClassification'].apply(ast.literal_eval)
-    # startupData['startupClassification'] = startupData['startupClassification'].apply(ast.literal_eval)
-    # startupData['keyword'] = startupData['keyword'].apply(ast.literal_eval)
-    # startupData['dealInvestmentAmount'] = startupData['dealInvestmentAmount'].apply(ast.literal_eval)
-    # startupData['roundDate'] = startupData['roundDate'].apply(ast.literal_eval)
-    # startupData['roundInvestmentAmount'] = startupData['roundInvestmentAmount'].apply(ast.literal_eval)
-    # startupData['roundInvestorCount'] = startupData['roundInvestorCount'].apply(ast.literal_eval)
-    # startupData['roundLeadInvestorType'] = startupData['roundLeadInvestorType'].apply(ast.literal_eval)
-    # startupData['roundValuation'] = startupData['roundValuation'].apply(ast.literal_eval)
-    # startupData['equityValuation			'] = startupData['equityValuation			'].apply(ast.literal_eval)
-    # startupData['investorName'] = startupData['investorName'].apply(ast.literal_eval)
-    # startupData['investorType'] = startupData['investorType'].apply(ast.literal_eval)
-    # startupData['investmentStage'] = startupData['investmentStage'].apply(ast.literal_eval)
-    # startupData['founderName'] = startupData['founderName'].apply(ast.literal_eval)
-    # startupData['investorName'] = startupData['investorName'].apply(ast.literal_eval)
-    # startupData['linkedinURL'] = startupData['linkedinURL'].apply(ast.literal_eval)
+class classCollectionData:
+    def __init__(self):
+        self.startupInfo = { 'startupID': str,
+                        'ICB_industry':str,
+                        'ICB_sector':str,
+                        'accelaratorResult':str,
+                        'accelerator':str,
+                        'accleratorDate':str,
+                        'businessModel':str,
+                        'description':str,
+                        'foundedDate':str,
+                        'groupClassification':list,
+                        'incubator':str,
+                        'incubatorDate':str,
+                        'incubatorResult':str,
+                        'keyword':list,
+                        'source':str,
+                        'startupClassification':list,
+                        'startupName':str,
+                        'startupStatus':str,
+                        'state':str,
+                        'founderName':list,
+                        'website':str,
+                        'city':str
+                        }
+        self.fundingInfo = {}
+        self.personInfo = {}
+        self.educationInfo = {}
+        self.experienceInfo = {}
 
 
-	# Make changes that is definite here. It should pass through this step before it goes to the database
+class classStartupData:
 
-		# Add the new column, whether startupValidated
+    # Dataframe
+    def __init__(self, my_dataframe):
+        self.DataFrame = my_dataframe
 
-    # print  all(isinstance(item, np.nan) for item in startupData['roundDate'])
+    # Modified Dataframe with cells not having valid type removed
+    validatedData = pd.DataFrame()
+    # def: split the strings into arrays ( List)
+    # return same dataframe
+    def convertStringsToLists(self,colList):
+        # startupData.fillna('',inplace=True)
+        for col in colList:
+            self.DataFrame[col] = self.DataFrame[col].apply(ast.literal_eval)
+
+    # This is not used at the moment since mongodb cannot store the datetime. Wea re usingit as string
+    def convertStringsToDate(self,dateCol):
+        for col in dateCol:
+            print col, type(self.DataFrame.loc[0,col])
+            self.DataFrame[col] = self.DataFrame[col].apply(lambda x: datetime.strptime(x,'%Y-%m-%d'))
+            print col, type(self.DataFrame.loc[0,col])
+    # def: replace nan into '[]'
+    def treatEmptyCols(self, colList):
+
+        for col in colList:
+            self.DataFrame[col].fillna('[]',inplace=True)
+
+    # Check of the column types on input dataframe is the same as we expected
+    def validateCollection(self,dictionary):
+        for key,val in dictionary.iteritems():
+            self.validatedData[key]= self.DataFrame.loc[self.DataFrame[key].apply(type)==val,key]
 
 
 
-	# startupData['']
 
+
+
+# validate the datatype of each element of the column
+def validateData():
+
+    # Get the dict having details about the types of collection
+    startupInfoDict =  collectionObject.startupInfo
+
+    # Validate the data in each column
+    startupObject.validateCollection(startupInfoDict)
+
+
+    # # We can get more such collections tested by running a for loop on the collection list
     #
-    # sampleData['roundInvestmentAmountINR'] =sampleData['roundInvestmentAmountINR'].apply(ast.literal_eval)
-    # sampleData['investorID'] =sampleData['investorID'].apply(ast.literal_eval)
-    # sampleData['founderID'] =sampleData['founderID'].apply(ast.literal_eval)
-    # sampleData['startupClassification'] =sampleData['startupClassification'].apply(ast.literal_eval)
-    # # sampleData['dealDate'] =sampleData['dealDate'].apply(ast.literal_eval)
-    # sampleData['groupClassification'] =sampleData['groupClassification'].apply(ast.literal_eval)
+    # # Get the locations where data is rejected by our validator
+    changedLocations = (np.where(startupObject.DataFrame[startupInfoDict.keys()] != startupObject.validatedData))
+
+    reworkDataframe = pd.DataFrame(np.nan, index=startupObject.DataFrame[startupInfoDict.keys()].index, columns=startupObject.DataFrame[startupInfoDict.keys()].columns)
+    reworkDataframe[['startupID','startupName']] = startupObject.DataFrame[['startupID','startupName']]
+    for row in range(len(changedLocations[0])):
+        reworkDataframe.ix[changedLocations[0][row], changedLocations[1][row]] = startupObject.DataFrame[startupInfoDict.keys()].ix[
+            changedLocations[0][row], changedLocations[1][row]]
+
+    reworkDataframe.fillna('').to_csv('rework.csv', index=False)
     #
-    # for index,row in sampleData.iterrows():
-    #     for column in sampleData:
-    #         # print type(sampleData.iloc[0][column]),sampleData.iloc[0][column]
+
+
+# passed, failed = def Validate the data ( dict)
+
+
+# Get the strings of startup data as arrays
+def treatStartupData():
+    # Get the dict having details about the types of collection
+    startupInfoDict = collectionObject.startupInfo
+
+    # Get the columns that have list as the type in the collection
+    listCol = [key for key,val in startupInfoDict.iteritems() if val == list]
+
+    # Convert the emptyLocations(nan) into empty array. Helpful in using ast.Literaleval
+    startupObject.treatEmptyCols(listCol)
+
+    # Convert the strings to list inside the class
+    startupObject.convertStringsToLists(listCol)
+
+
+    # Store dateime as string since mongodb cannot anyway  use it
+
+    # # Get the columns that have list as the type in the collection
+    # dateCol = [key for key, val in startupInfoDict.iteritems() if val == datetime]
     #
-    #         if isinstance(sampleData.iloc[0][column], list):
-    #             for x in range(len(sampleData.iloc[0][column])):
-    #                 print column,': ',x,': ',sampleData.iloc[0][column][x], type(sampleData.iloc[0][column][x])
-    #         else:
-    #             print column,': ',(sampleData.iloc[0][column]), type(sampleData.iloc[0][column])
+    # # Convert the strings to datetime inside the class
+    # startupObject.convertStringsToDate(dateCol)
 
 
-def adjustPerson():
-    # remove unicodes
-    # Validators
-    # Push to database
-    print "DO nothing"
+if __name__=='__main__':
 
-def main():
-	adjustStartup(db=None)
-
-    # try:
-    #     conn = pymongo.MongoClient()
-    #     print "Connected successfully!!!"
-    # except pymongo.errors.ConnectionFailure, e:
-    #     print "Could not connect to MongoDB: %s" % e
-    #
-    # db = conn.YNOS
-
-    # takes input as a startupData and person Data with the investor Founder mapping
-    # startupData = pd.read_csv('../dataGeneration/output/startupData.csv')
-    # personData = pd.read_csv('../dataGeneration/output/personData.csv')
+    # Get the collection Info as a class: This has the data types of all the variables in the collections
+    collectionObject = classCollectionData()
 
 
 
+    # Read input file
+    startupData = pd.read_csv('./data/startupData.csv')
 
-    # startupInfo = startupData.ix[:,col]
+    # Connect to DB to get the latest ID
+    try:
+        conn = pymongo.MongoClient()
+        print "Connected successfully!!!"
+    except pymongo.errors.ConnectionFailure, e:
+        print "Could not connect to MongoDB: %s" % e
 
-    # get the investment related details
+    YNOSdatabase = conn.YNOS
+
+    # Check if id exists for our input file
+    isUpDate = True if 'startupID' in startupData.columns else False
+
+    # If yes: it is an update operation. Do nothing
+    # if no # Generate IDS for them by incrementing the DatabaseiD
+    if(not isUpDate):
+        # Change this logic after connecting to DB
+        startupData['startupID'] = ["S_" + str(index) for index, row in startupData.iterrows()]
 
 
-    # get the person detail
-
-    # get the academic details
-
-    # get the experience detail
+    #Push dataframe into a class
+    startupObject = classStartupData(startupData)
 
 
+    # treat the data in the dataframe to get them into desired formats
+    treatStartupData()
+
+    #  Validate the formats
+    validateData()
 
 
+    # Add other validators in the mongoDB database
+
+    # Check if the ID exists in the database ( Test using empty database and filled database
+    # If yes update that particular field
+    # If no, append to database
 
 
-
-    # print personData.shape
-
-
-    # split into the 5 collections
-
-    # Validate
-
-    # push into database
-
-    # adjustStartup(db=None)
-    # adjustPerson(db)
-if __name__=="__main__":
-    main()
 
 
