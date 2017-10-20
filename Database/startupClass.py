@@ -5,30 +5,38 @@ import pandas as pd
 import numpy as np
 class classCollectionData:
     def __init__(self):
-        self.startupInfo = { 'startupID': str,
-                        'ICB_industry':str,
-                        'ICB_sector':str,
-                        'accelaratorResult':str,
-                        'accelerator':str,
-                        'accleratorDate':datetime,
-                        'businessModel':str,
-                        'description':str,
-                        'foundedDate':datetime,
-                        'groupClassification':list,
-                        'incubator':str,
-                        'incubatorDate':datetime,
-                        'incubatorResult':str,
-                        'keyword':list,
-                        'source':str,
-                        'startupClassification':list,
-                        'startupName':str,
-                        'startupStatus':str,
-                        'state':str,
-                        'founderName':list,
-                        'website':str,
-                        'city':str,
-                        'Lat' : float,
-                        'Lon' : float
+        self.startupInfo = { 'startupID': {"type": str},
+                            'ICB_industry':{"type": str},
+                            'ICB_sector':{"type": str},
+                            'accelaratorResult':{"type": str},
+                            'accelerator':{"type": str},
+                            'accleratorDate':{"type": datetime},
+                            'businessModel':{"type": str},
+                            'description':{"type": str},
+                            'foundedDate':{"type": datetime},
+                            'groupClassification':{"type": list,
+                                                   "element":{"type": str}
+                                                   },
+                            'incubator':{"type": str},
+                            'incubatorDate':{"type": datetime},
+                            'incubatorResult':{"type": str},
+                            'keyword':{"type": list,
+                                       "element":{"type": str}
+                                       },
+                            'source':{"type": str},
+                            'startupClassification':{"type": list,
+                                                     "element":{"type": str}
+                                                     },
+                            'startupName':{"type": str},
+                            'startupStatus':{"type": str},
+                            'state':{"type": str},
+                            'founderName':{"type": list,
+                                           "element":{"type": str}
+                                           },
+                            'website':{"type": str},
+                            'city':{"type": str},
+                            'Lat' : {"type": float},
+                            'Lon' : {"type": float}
                         }
         self.fundingInfo = {}
         self.personInfo = {}
@@ -83,14 +91,26 @@ class classStartupData:
 
     # Check of the column types on input dataframe is the same as we expected
     def validateCollection(self,dictionary):
-        self.validData = pd.DataFrame(np.nan, index=self.DataFrame[dictionary.keys()].index,
-                                       columns=self.DataFrame[dictionary.keys()].columns)
-        for key,val in dictionary.iteritems():
-           self.validData[key] =  self.treatedData.loc[self.treatedData[key].apply(type) == val,key]
+        self.validData = pd.DataFrame(np.nan, index=self.DataFrame[list(dictionary)].index,
+                                       columns=self.DataFrame[list(dictionary)].columns)
 
+        # Check the sub elements in the columns
+        for key,val in dictionary.items():
+           self.validData[key] =  self.treatedData.loc[self.treatedData[key].apply(type) == val["type"],key]
 
+           if val["type"] == list:
+               for index, row in self.validData[self.validData[key].notnull()].iterrows():
 
-        # #    # print type(self.treatedData.loc[0,key]),self.treatedData.loc[0,key], val, key
+                   elemList=[]
+                   for elem in self.validData.loc[index, key]:
+                       if (isinstance(elem, val["element"]['type']) == True):
+                           elemList.append(elem)
+                       else:
+                           elemList.append(np.nan)
+
+                   self.validData.set_value(index, key,elemList)
+
+                       # #    # print type(self.treatedData.loc[0,key]),self.treatedData.loc[0,key], val, key
         # #    print self.treatedData[key].apply(type) == val,key
         #    print key
         #    print self.treatedData[key].apply(lambda x: type(x) == dictionary[key])
